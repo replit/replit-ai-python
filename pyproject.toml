@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ai"
+name = "replit.ai"
 version = "0.0.0"
 description = "A library for interacting with AI features of replit"
 authors = ["Repl.it <contact@repl.it>"]
@@ -10,7 +10,7 @@ homepage = "https://github.com/replit/replit-py-ai"
 documentation = "https://replit-py-ai.readthedocs.org/"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: ISC License",
+    "License :: OSI Approved :: ISC License (ISCL)",
     "Operating System :: OS Independent",
 ]
 packages = [
