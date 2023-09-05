@@ -1,4 +1,4 @@
-from replitai.config import initialize, get_config, Config
+from replit.ai.config import initialize, get_config, Config
 
 
 def test_config_initialization():

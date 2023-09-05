@@ -4,7 +4,7 @@ import time
 from typing import Optional
 import requests
 import json
-from replitai.config import get_config
+from replit.ai.config import get_config
 
 
 class ReplitIdentityTokenManager():

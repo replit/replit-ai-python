@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from replitai.completion_model import CompletionModel, CompletionModelResponse
+from replit.ai.completion_model import CompletionModel, CompletionModelResponse
 from typing import List, Dict, Any, Iterator
-from replitai.google.utils import ready_parameters
-from replitai.google.structs import TextGenerationResponse
+from replit.ai.google.utils import ready_parameters
+from replit.ai.google.structs import TextGenerationResponse
 
 
 class TextGenerationModel:

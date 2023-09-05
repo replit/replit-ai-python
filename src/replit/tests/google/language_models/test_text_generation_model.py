@@ -1,5 +1,5 @@
 import pytest
-from replitai.google.language_models import TextGenerationModel, TextGenerationResponse
+from replit.ai.google.language_models import TextGenerationModel, TextGenerationResponse
 
 TEST_PARAMETERS = {
     "temperature":

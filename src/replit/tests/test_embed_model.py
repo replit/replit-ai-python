@@ -1,6 +1,6 @@
 import pytest
-from replitai import EmbedModel
-from replitai.exceptions import BadRequestException
+from replit.ai import EmbedModel
+from replit.ai.exceptions import BadRequestException
 
 # module level constants
 CONTENT = [{"content": "1 + 1 = "}]
@@ -23,8 +23,8 @@ def test_embed_model_predict(model):
 
   choice_metadata = embedding.tokenCountMetadata
   assert embedding.tokenCountMetadata.unbilledTokens == 4
-  import pdb
-  pdb.set_trace()
+  # import pdb
+  # pdb.set_trace()
   pass
 
 

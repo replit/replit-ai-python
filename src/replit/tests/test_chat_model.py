@@ -1,7 +1,7 @@
 import pytest
-from replitai import ChatModel
-from replitai.exceptions import BadRequestException
-from replitai.structs import ChatSession, ChatMessage, ChatExample
+from replit.ai import ChatModel
+from replit.ai.exceptions import BadRequestException
+from replit.ai.structs import ChatSession, ChatMessage, ChatExample
 
 # module level constants
 PROMPT = [
