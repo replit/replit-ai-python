@@ -37,8 +37,6 @@ class EmbedModel(Model):
         json=self.__build_request_payload(content, parameters),
     )
     self._check_response(response)
-    # import pdb
-    # pdb.set_trace()
     return EmbeddingModelResponse(**response.json())
 
   async def aembed(self, content: List[Dict[str, Any]],
