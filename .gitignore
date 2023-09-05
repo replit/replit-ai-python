@@ -1,3 +1,10 @@
 # Python 
 /dist/
 __pycache__/
+
+# Replit
+.breakpoints
+.replit
+replit.nix
+.pythonlibs/
+
