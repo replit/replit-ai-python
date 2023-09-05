@@ -23,8 +23,6 @@ def test_embed_model_predict(model):
 
   choice_metadata = embedding.tokenCountMetadata
   assert embedding.tokenCountMetadata.unbilledTokens == 4
-  # import pdb
-  # pdb.set_trace()
   pass
 
 
