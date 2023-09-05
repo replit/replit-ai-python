@@ -1,6 +1,6 @@
-from replitai.google.preview.language_models import ChatModel, InputOutputTextPair
+from replit.ai.google.preview.language_models import ChatModel, InputOutputTextPair
 import pytest
-from replitai.google.structs import TextGenerationResponse
+from replit.ai.google.structs import TextGenerationResponse
 
 parameters = {
     "temperature":

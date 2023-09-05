@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from replitai.chat_model import ChatModel as ReplitChatModel, ChatModelResponse
-from replitai.structs import ChatSession as ReplitChatSession, ChatExample as ReplitChatExample, ChatMessage as ReplitChatMessage
+from replit.ai.chat_model import ChatModel as ReplitChatModel, ChatModelResponse
+from replit.ai.structs import ChatSession as ReplitChatSession, ChatExample as ReplitChatExample, ChatMessage as ReplitChatMessage
 from typing import List, Optional, Dict, Any
-from replitai.google.utils import ready_parameters
-from replitai.google.structs import TextGenerationResponse
+from replit.ai.google.utils import ready_parameters
+from replit.ai.google.structs import TextGenerationResponse
 
 USER_AUTHOR = "user"
 MODEL_AUTHOR = "bot"

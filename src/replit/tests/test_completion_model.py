@@ -1,6 +1,6 @@
 import pytest
-from replitai import CompletionModel
-from replitai.exceptions import BadRequestException
+from replit.ai import CompletionModel
+from replit.ai.exceptions import BadRequestException
 
 # module level constants
 PROMPT = ["1 + 1 = "]

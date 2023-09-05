@@ -1,6 +1,6 @@
 from requests import JSONDecodeError
 from .replit_identity_token_manager import replit_identity_token_manager
-from replitai.config import get_config
+from replit.ai.config import get_config
 from .exceptions import InvalidResponseException, BadRequestException
 import aiohttp
 import requests
