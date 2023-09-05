@@ -18,9 +18,22 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.8.0"
+requests = "^2.31.0"
+pydantic = "^2.3.0"
+aiohttp = "^3.8.5"
+pytest-asyncio = "^0.21.1"
+
+
+[tool.pyright]
+# https://github.com/microsoft/pyright/blob/main/docs/configuration.md
+useLibraryCodeForTypes = true
+
 
 [tool.poetry.dev-dependencies]
+Flask = "^2.2.0"
+pytest = "^7.4.1"
+
 
 [build-system]
 requires = ["poetry>=0.12"]
@@ -33,3 +46,8 @@ replit = "replit.__main__:cli"
 exclude = [
 	"_pb2.py$",  # Generated code
 ]
+
+[tool.ruff]
+# https://beta.ruff.rs/docs/configuration/
+select = ['E', 'W', 'F', 'I', 'B', 'C4', 'ARG', 'SIM']
+ignore = ['W291', 'W292', 'W293']
