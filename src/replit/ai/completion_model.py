@@ -19,7 +19,7 @@ class CompletionModel(Model):
     super().__init__(**kwargs)
     self.model_name = model_name
 
-  def predict(self, prompts: List[str],
+  def generate(self, prompts: List[str],
               parameters: Dict[str, Any]) -> CompletionModelResponse:
     """
     Makes a prediction based on the prompts and parameters.

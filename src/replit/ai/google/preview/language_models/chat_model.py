@@ -44,7 +44,7 @@ class ChatSession:
     self.add_user_message(message)
     predictParams = dict(**self.parameters, **kwargs)
     session = self.get_chat_session()
-    response = self.underlying_model.predict([session],
+    response = self.underlying_model.generate([session],
                                              ready_parameters(predictParams))
     self.add_model_message(self.__get_response_content(response))
     return self.__ready_response(response)

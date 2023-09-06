@@ -6,7 +6,7 @@ import aiohttp
 
 
 class ChatModel(Model):
-  """Handles predictions from a chat model."""
+  """Chat model for generations"""
 
   def __init__(self, model_name: str, **kwargs: Dict[str, Any]):
     """
@@ -19,10 +19,10 @@ class ChatModel(Model):
     super().__init__(**kwargs)
     self.model_name = model_name
 
-  def predict(self, prompts: List[ChatSession],
+  def generate(self, prompts: List[ChatSession],
               parameters: Dict[str, Any]) -> ChatModelResponse:
     """
-    Makes a prediction based on the prompts and parameters.
+    Makes a generation based on the prompts and parameters.
 
     Args:
       prompts (List[ChatSession]): The list of chat session prompts.
@@ -42,7 +42,7 @@ class ChatModel(Model):
   async def apredict(self, prompts: List[str],
                      parameters: Dict[str, Any]) -> ChatModelResponse:
     """
-    Makes an asynchronous prediction based on the prompts and parameters.
+    Makes an asynchronous generation based on the prompts and parameters.
 
     Args:
       prompts (List[ChatSession]): The list of prompts.

@@ -43,7 +43,7 @@ class TextGenerationModel:
         TextGenerationResponse: The model's response containing the generated text.
     """
     parameters = ready_parameters(kwargs)
-    response = self.underlying_model.predict([prompt], parameters)
+    response = self.underlying_model.generate([prompt], parameters)
     return self.__ready_response(response)
 
   def predict_streaming(self, prompt: str,
