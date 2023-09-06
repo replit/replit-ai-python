@@ -9,21 +9,59 @@ import json
 
 
 class Model:
+  """
+  Base class for models.
+  
+  Attributes:
+      server_url (str): The URL of the server to which the model sends requests.
+  
+  Methods:
+      predict(prompt, parameters): Abstract method to be implemented by subclasses.
+  """
+  
   server_url: str
 
   def __init__(self, **kwargs):
+    """
+    Initialize a Model object with an optional server URL.
+    
+    Keyword Arguments:
+        server_url (str): Optional. Server URL for the model. 
+                          Defaults to the value in the configuration.
+    """
     self.server_url = kwargs.get('server_url') or get_config().rootUrl
 
   def predict(self, prompt, parameters):
+    """
+    The method for making predictions.
+    
+    Parameters:
+        prompt: The input prompt for the prediction.
+        parameters: Additional parameters for the prediction.
+        
+    Raises:
+        NotImplementedError: This method must be implemented by subclasses.
+    """
     raise NotImplementedError(
         "Subclasses of Model must implement predict(self, prompt, parameters)")
 
   def _check_response(self, response):
+    """
+    Validates a response from the server.
+    
+    Parameters:
+        response: The server response to check.
+        
+    Raises:
+        InvalidResponseException: If the response is not valid JSON.
+        BadRequestException: If the response contains a 400 status code.
+    """
     try:
       rjson = response.json()
     except JSONDecodeError as e:
       raise InvalidResponseException(
           f"Invalid response: {response.text}") from e
+
     if response.status_code == 400:
       raise BadRequestException(rjson['detail'])
     if response.status_code != 200:
@@ -32,11 +70,27 @@ class Model:
       raise InvalidResponseException(rjson)
 
   def _check_streaming_response(self, response):
+    """
+    Validates a streaming response from the server.
+    
+    Parameters:
+        response: The server's streaming response to check.
+    """
     if response.status_code == 200:
       return
     self._check_response(response)
 
   async def _check_aresponse(self, response):
+    """
+    Validates an asynchronous response from the server.
+    
+    Parameters:
+        response: The asynchronous server response to check.
+        
+    Raises:
+        InvalidResponseException: If the response is not valid JSON.
+        BadRequestException: If the response contains a 400 status code.
+    """
     try:
       rjson = await response.json()
     except JSONDecodeError as e:
@@ -51,15 +105,36 @@ class Model:
       raise InvalidResponseException(rjson)
 
   async def _check_streaming_aresponse(self, response):
+    """
+    Validates an asynchronous streaming response from the server.
+    
+    Parameters:
+        response: The server's asynchronous streaming response to check.
+    """
     if response.status == 200:
       return
     await self._check_aresponse(response)
 
   def _get_auth_headers(self):
+    """
+    Gets authentication headers required for API requests.
+    
+    Returns:
+        dict: A dictionary containing the Authorization header.
+    """
     token = replit_identity_token_manager.get_token()
     return {"Authorization": f"Bearer {token}"}
 
   def _parse_streaming_response(self, response) -> Iterator[any]:
+    """
+    Parses a streaming response from the server.
+    
+    Parameters:
+        response: The server's streaming response to parse.
+        
+    Yields:
+        JSON objects extracted from the streaming response.
+    """
     buffer = b""
     decoder = json.JSONDecoder()
     for chunk in response.iter_content(chunk_size=128):
@@ -82,6 +157,15 @@ class Model:
           break
 
   async def _parse_streaming_aresponse(self, response) -> Iterator[any]:
+    """
+    Asynchronously parses a streaming response from the server.
+    
+    Parameters:
+        response: The server's asynchronous streaming response to parse.
+        
+    Yields:
+        JSON objects extracted from the streaming response.
+    """
     buffer = b""
     decoder = json.JSONDecoder()
     while True:
