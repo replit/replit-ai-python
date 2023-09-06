@@ -19,10 +19,10 @@ class ChatModel(Model):
     super().__init__(**kwargs)
     self.model_name = model_name
 
-  def predict(self, prompts: List[ChatSession],
+  def generate(self, prompts: List[ChatSession],
               parameters: Dict[str, Any]) -> ChatModelResponse:
     """
-    Makes a prediction based on the prompts and parameters.
+    Makes a generation based on the prompts and parameters.
 
     Args:
       prompts (List[ChatSession]): The list of chat session prompts.
@@ -39,10 +39,10 @@ class ChatModel(Model):
     self._check_response(response)
     return ChatModelResponse(**response.json())
 
-  async def apredict(self, prompts: List[str],
+  async def async_generate(self, prompts: List[str],
                      parameters: Dict[str, Any]) -> ChatModelResponse:
     """
-    Makes an asynchronous prediction based on the prompts and parameters.
+    Makes an asynchronous generation based on the prompts and parameters.
 
     Args:
       prompts (List[ChatSession]): The list of prompts.
@@ -60,11 +60,11 @@ class ChatModel(Model):
         await self._check_aresponse(response)
         return ChatModelResponse(**await response.json())
 
-  def predict_stream(
+  def generate_stream(
       self, prompts: List[str],
       parameters: Dict[str, Any]) -> Iterator[ChatModelResponse]:
     """
-    Streams predictions based on the prompts and parameters.
+    Streams generations based on the prompts and parameters.
 
     Args:
       prompts (List[ChatSession]): The list of prompts.
@@ -83,11 +83,11 @@ class ChatModel(Model):
     for chunk in self._parse_streaming_response(response):
       yield ChatModelResponse(**chunk)
 
-  async def apredict_stream(
+  async def async_generate_stream(
       self, prompts: List[str],
       parameters: Dict[str, Any]) -> Iterator[ChatModelResponse]:
     """
-    Streams asynchronous predictions based on the prompts and parameters.
+    Streams asynchronous generations based on the prompts and parameters.
 
     Args:
       prompts (List[ChatSession]): The list of prompts.

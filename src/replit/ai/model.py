@@ -31,7 +31,7 @@ class Model:
     """
     self.server_url = kwargs.get('server_url') or get_config().rootUrl
 
-  def predict(self, prompt, parameters):
+  def generate(self, prompt, parameters):
     """
     The method for making predictions.
     

@@ -43,7 +43,7 @@ class TextGenerationModel:
         TextGenerationResponse: The model's response containing the generated text.
     """
     parameters = ready_parameters(kwargs)
-    response = self.underlying_model.predict([prompt], parameters)
+    response = self.underlying_model.generate([prompt], parameters)
     return self.__ready_response(response)
 
   def predict_streaming(self, prompt: str,
@@ -58,7 +58,7 @@ class TextGenerationModel:
         TextGenerationResponse: The model's response containing the generated text.
     """
     parameters = ready_parameters(kwargs)
-    response = self.underlying_model.predict_stream([prompt], parameters)
+    response = self.underlying_model.generate_stream([prompt], parameters)
     for x in response:
       yield self.__ready_response(x)
 
@@ -74,7 +74,7 @@ class TextGenerationModel:
         TextGenerationResponse: The model's response containing the generated text.
     """
     parameters = ready_parameters(kwargs)
-    response = await self.underlying_model.apredict([prompt], parameters)
+    response = await self.underlying_model.async_generate([prompt], parameters)
     return self.__ready_response(response)
 
   async def async_predict_streaming(self, prompt: str,
@@ -89,7 +89,7 @@ class TextGenerationModel:
         TextGenerationResponse: The model's response containing the generated text.
     """
     parameters = ready_parameters(kwargs)
-    response = self.underlying_model.apredict_stream([prompt], parameters)
+    response = self.underlying_model.async_generate_stream([prompt], parameters)
     async for x in response:
       yield self.__ready_response(x)
 
