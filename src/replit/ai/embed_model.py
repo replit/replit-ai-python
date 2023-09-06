@@ -19,7 +19,7 @@ class EmbedModel(Model):
     super().__init__(**kwargs)
     self.model_name = model_name
 
-  def embed(self, content: List[Dict[str, Any]],
+  def generate(self, content: List[Dict[str, Any]],
             parameters: Dict[str, Any]) -> EmbeddingModelResponse:
     """
     Makes a prediction based on the content and parameters.
@@ -39,10 +39,10 @@ class EmbedModel(Model):
     self._check_response(response)
     return EmbeddingModelResponse(**response.json())
 
-  async def aembed(self, content: List[Dict[str, Any]],
+  async def async_generate(self, content: List[Dict[str, Any]],
                    parameters: Dict[str, Any]) -> EmbeddingModelResponse:
     """
-    Makes an asynchronous prediction based on the content and parameters.
+    Makes an asynchronous embedding generation based on the content and parameters.
 
     Args:
       content (List[Dict[str, Any]]): The list of content to embed. For most models the dictionary should contain the content to embed with the "content" key.

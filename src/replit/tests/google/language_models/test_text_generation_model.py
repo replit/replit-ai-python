@@ -15,7 +15,7 @@ TEST_PARAMETERS = {
 
 def test_text_generation_model_predict():
   model = TextGenerationModel.from_pretrained("text-bison@001")
-  response = model.generate(
+  response = model.predict(
       "Give me ten interview questions for the role of program manager.",
       **TEST_PARAMETERS,
   )
@@ -25,7 +25,7 @@ def test_text_generation_model_predict():
 @pytest.mark.asyncio
 async def test_text_generation_model_async_predict():
   model = TextGenerationModel.from_pretrained("text-bison@001")
-  response = await model.async_generate(
+  response = await model.async_predict(
       "Give me ten interview questions for the role of program manager.",
       **TEST_PARAMETERS,
   )
