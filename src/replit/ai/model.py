@@ -16,7 +16,11 @@ class Model:
       server_url (str): The URL of the server to which the model sends requests.
   
   Methods:
+<<<<<<< HEAD
       generate(prompt, parameters): Abstract method to be implemented by subclasses.
+=======
+      predict(prompt, parameters): Abstract method to be implemented by subclasses.
+>>>>>>> main
   """
   
   server_url: str

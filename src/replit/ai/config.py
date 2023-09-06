@@ -3,9 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-
   """Config for the Model Farm API client."""
-  rootUrl: str = "http://production-modelfarm.replit.com"
+  rootUrl: str = "https://production-modelfarm.replit.com"
   audience: str = "modelfarm@replit.com"
 
 
