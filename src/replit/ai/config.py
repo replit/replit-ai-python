@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-  rootUrl: str = "http://staging-modelfarm.ai.gcp.replit.com"
+  rootUrl: str = "http://production-modelfarm.replit.com"
   audience: str = "modelfarm@replit.com"
 
 
