@@ -6,7 +6,7 @@ import aiohttp
 
 
 class CompletionModel(Model):
-  """Handles predictions from a completion model."""
+  """Model for text completion generations."""
 
   def __init__(self, model_name: str, **kwargs: Dict[str, Any]):
     """
@@ -22,7 +22,7 @@ class CompletionModel(Model):
   def generate(self, prompts: List[str],
               parameters: Dict[str, Any]) -> CompletionModelResponse:
     """
-    Makes a prediction based on the prompts and parameters.
+    Makes a generation based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
@@ -39,9 +39,9 @@ class CompletionModel(Model):
     self._check_response(response)
     return CompletionModelResponse(**response.json())
 
-  async def apredict(self, prompts: List[str], parameters: Dict[str, Any]) -> CompletionModelResponse:
+  async def async_generate(self, prompts: List[str], parameters: Dict[str, Any]) -> CompletionModelResponse:
     """
-    Makes an asynchronous prediction based on the prompts and parameters.
+    Makes an asynchronous generation based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
@@ -59,11 +59,11 @@ class CompletionModel(Model):
         await self._check_aresponse(response)
         return CompletionModelResponse(**await response.json())
 
-  def predict_stream(
+  def generate_stream(
       self, prompts: List[str],
       parameters: Dict[str, Any]) -> Iterator[CompletionModelResponse]:
     """
-    Streams predictions based on the prompts and parameters.
+    Streams generations based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
@@ -82,9 +82,9 @@ class CompletionModel(Model):
     for chunk in self._parse_streaming_response(response):
       yield CompletionModelResponse(**chunk)
 
-  async def apredict_stream(self, prompts: List[str], parameters: Dict[str, Any]) -> Iterator[CompletionModelResponse]:
+  async def async_generate_stream(self, prompts: List[str], parameters: Dict[str, Any]) -> Iterator[CompletionModelResponse]:
     """
-    Streams asynchronous predictions based on the prompts and parameters.
+    Streams asynchronous generations based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
