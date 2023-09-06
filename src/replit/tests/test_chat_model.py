@@ -26,8 +26,8 @@ def model():
   return ChatModel("chat-bison")
 
 
-def test_chat_model_predict(model):
-  response = model.predict(PROMPT, VALID_PARAMETERS)
+def test_chat_model_generate(model):
+  response = model.generate(PROMPT, VALID_PARAMETERS)
 
   assert len(response.responses) == 1
   assert len(response.responses[0].candidates) == 1
@@ -40,9 +40,9 @@ def test_chat_model_predict(model):
   assert choice_metadata['safetyAttributes']['blocked'] is False
 
 
-def test_chat_model_predict_invalid_parameter(model):
+def test_chat_model_generate_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    model.predict(PROMPT, INVALID_PARAMETERS)
+    model.generate(PROMPT, INVALID_PARAMETERS)
 
 
 @pytest.mark.asyncio
