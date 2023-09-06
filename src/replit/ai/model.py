@@ -10,7 +10,7 @@ import json
 
 class Model:
   """
-  Abstract base class for machine learning models that interact with a server.
+  Base class for models.
   
   Attributes:
       server_url (str): The URL of the server to which the model sends requests.
@@ -33,7 +33,7 @@ class Model:
 
   def predict(self, prompt, parameters):
     """
-    Abstract method for making predictions.
+    The method for making predictions.
     
     Parameters:
         prompt: The input prompt for the prediction.
@@ -140,12 +140,18 @@ class Model:
     for chunk in response.iter_content(chunk_size=128):
       buffer += chunk
       buffer_str = buffer.decode("utf-8")
+
       start_idx = 0
+      # Iteratively parse JSON objects
       while start_idx < len(buffer_str):
         try:
+          # Load JSON object
           result = decoder.raw_decode(buffer_str, start_idx)
           json_obj, end_idx = result
+
           yield json_obj
+
+          # Update start index for next iteration
           start_idx = end_idx
         except json.JSONDecodeError:
           break
@@ -168,12 +174,18 @@ class Model:
         break
       buffer += chunk
       buffer_str = buffer.decode("utf-8")
+
       start_idx = 0
+      # Iteratively parse JSON objects
       while start_idx < len(buffer_str):
         try:
+          # Load JSON object
           result = decoder.raw_decode(buffer_str, start_idx)
           json_obj, end_idx = result
+
           yield json_obj
+
+          # Update start index for next iteration
           start_idx = end_idx
         except json.JSONDecodeError:
           break
