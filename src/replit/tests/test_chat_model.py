@@ -26,8 +26,8 @@ def model():
   return ChatModel("chat-bison")
 
 
-def test_chat_model_predict(model):
-  response = model.predict(PROMPT, VALID_PARAMETERS)
+def test_chat_model_generate(model):
+  response = model.generate(PROMPT, VALID_PARAMETERS)
 
   assert len(response.responses) == 1
   assert len(response.responses[0].candidates) == 1
@@ -40,14 +40,14 @@ def test_chat_model_predict(model):
   assert choice_metadata['safetyAttributes']['blocked'] is False
 
 
-def test_chat_model_predict_invalid_parameter(model):
+def test_chat_model_generate_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    model.predict(PROMPT, INVALID_PARAMETERS)
+    model.generate(PROMPT, INVALID_PARAMETERS)
 
 
 @pytest.mark.asyncio
-async def test_chat_model_apredict(model):
-  response = await model.apredict(PROMPT, VALID_PARAMETERS)
+async def test_chat_model_async_generate(model):
+  response = await model.async_generate(PROMPT, VALID_PARAMETERS)
 
   assert len(response.responses) == 1
   assert len(response.responses[0].candidates) == 1
@@ -61,13 +61,13 @@ async def test_chat_model_apredict(model):
 
 
 @pytest.mark.asyncio
-async def test_chat_model_apredict_invalid_parameter(model):
+async def test_chat_model_async_generate_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    await model.apredict(PROMPT, INVALID_PARAMETERS)
+    await model.async_generate(PROMPT, INVALID_PARAMETERS)
 
 
-def test_chat_model_predict_stream(model):
-  responses = list(model.predict_stream(PROMPT, VALID_PARAMETERS))
+def test_chat_model_generate_stream(model):
+  responses = list(model.generate_stream(PROMPT, VALID_PARAMETERS))
 
   assert len(responses) > 1
   for response in responses:
@@ -78,15 +78,15 @@ def test_chat_model_predict_stream(model):
     assert len(candidate.message.content) >= 1
 
 
-def test_chat_model_predict_stream_invalid_parameter(model):
+def test_chat_model_generate_stream_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    list(model.predict_stream(PROMPT, INVALID_PARAMETERS))
+    list(model.generate_stream(PROMPT, INVALID_PARAMETERS))
 
 
 @pytest.mark.asyncio
-async def test_chat_model_apredict_stream(model):
+async def test_chat_model_async_generate_stream(model):
   responses = [
-      res async for res in model.apredict_stream(PROMPT, VALID_PARAMETERS)
+      res async for res in model.async_generate_stream(PROMPT, VALID_PARAMETERS)
   ]
 
   assert len(responses) > 1
@@ -99,7 +99,7 @@ async def test_chat_model_apredict_stream(model):
 
 
 @pytest.mark.asyncio
-async def test_chat_model_apredict_stream_invalid_parameter(model):
+async def test_chat_model_async_generate_stream_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    async for _ in model.apredict_stream(PROMPT, INVALID_PARAMETERS):
+    async for _ in model.async_generate_stream(PROMPT, INVALID_PARAMETERS):
       pass

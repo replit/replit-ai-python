@@ -26,13 +26,13 @@ class TextEmbeddingModel:
 
   def get_embeddings(self, content: List[str]) -> List[TextEmbedding]:
     request = self.__ready_input(content)
-    response = self.underlying_model.embed(request, {})
+    response = self.underlying_model.generate(request, {})
     return self.__ready_response(response)
 
   async def async_get_embeddings(self,
                                  content: List[str]) -> List[TextEmbedding]:
     request = self.__ready_input(content)
-    response = await self.underlying_model.aembed(request, {})
+    response = await self.underlying_model.async_generate(request, {})
     return self.__ready_response(response)
 
   def __ready_input(self, content: List[str]) -> List[Dict[str, Any]]:
