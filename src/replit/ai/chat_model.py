@@ -4,7 +4,6 @@ import requests
 from .structs import ChatModelResponse, ChatSession
 import aiohttp
 
-
 class ChatModel(Model):
   """Handles predictions from a chat model."""
 
@@ -35,13 +34,12 @@ class ChatModel(Model):
       ChatModelResponse: The response from the model.
     
     """
-    # req_json = self.__build_request_payload(
-    #                              prompts=prompts,
-    #                              max_output_tokens=max_output_tokens,
-    #                              temperature=temperature,
-    #                              **kwargs)
+    req_json = self.__build_request_payload(
+                                 prompts=prompts,
+                                 max_output_tokens=max_output_tokens,
+                                 temperature=temperature,
+                                 **kwargs)
     
-    # pdb.set_trace()
     response = requests.post(self.server_url + "/chat",
                              headers=self._get_auth_headers(),
                              json=self.__build_request_payload(

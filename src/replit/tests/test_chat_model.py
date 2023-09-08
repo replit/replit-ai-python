@@ -3,6 +3,7 @@ from replit.ai import ChatModel
 from replit.ai.exceptions import BadRequestException
 from replit.ai.structs import ChatSession, ChatMessage, ChatExample
 
+
 # module level constants
 PROMPT = [
     ChatSession(context="You are philosphy bot.",
@@ -16,7 +17,11 @@ PROMPT = [
                 ])
 ]
 
-VALID_KWARGS = {}
+# kwargs for different endpoints and cases
+
+VALID_KWARGS = {"topP": 0.1, "topK": 20, "stopSequences": ["\n"], "candidateCount": 5}
+# generate_stream endpoint does not support the candidateCount arg
+VALID_GEN_STREAM_KWARGS = {"max_output_tokens": 128, "temperature": 0, "topP": 0.1, "topK": 20}
 INVALID_KWARGS = {"invalid_parameter": 0.5}
 
 
@@ -46,8 +51,6 @@ def test_chat_model_generate_invalid_parameter(model):
 
     
     
-
-
 @pytest.mark.asyncio
 async def test_chat_model_async_generate(model):
   response = await model.async_generate(PROMPT, **VALID_KWARGS)
@@ -70,7 +73,7 @@ async def test_chat_model_async_generate_invalid_parameter(model):
 
 
 def test_chat_model_generate_stream(model):
-  responses = list(model.generate_stream(PROMPT, **VALID_KWARGS))
+  responses = list(model.generate_stream(PROMPT, **VALID_GEN_STREAM_KWARGS))
 
   assert len(responses) > 1
   for response in responses:
@@ -85,6 +88,14 @@ def test_chat_model_generate_stream_invalid_parameter(model):
   with pytest.raises(BadRequestException):
     list(model.generate_stream(PROMPT, **INVALID_KWARGS))
 
+
+def test_chat_model_generate_stream_raises_with_candidate_count_param(model):
+  """
+  Test that generate_stream raises an exception if candidate_count is specified.
+  """
+  INVALID_CANDIDATE_COUNT_KWARGS = {"candidateCount":5 }
+  with pytest.raises(BadRequestException):
+    list(model.generate_stream(PROMPT, **INVALID_CANDIDATE_COUNT_KWARGS))
 
 @pytest.mark.asyncio
 async def test_chat_model_async_generate_stream(model):
