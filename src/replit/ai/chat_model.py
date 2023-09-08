@@ -34,7 +34,18 @@ class ChatModel(Model):
 
     Returns:
       ChatModelResponse: The response from the model.
+    
     """
+    # x = self.__build_request_payload(
+    #   prompts=prompts,
+    #   max_output_tokens=max_output_tokens,
+    #   temperature=temperature,
+    #   top_k=top_k,
+    #   **kwargs
+    # )
+    # import pdb
+    # pdb.set_trace()
+    
     response = requests.post(self.server_url + "/chat",
                              headers=self._get_auth_headers(),
                              json=self.__build_request_payload(
@@ -43,6 +54,8 @@ class ChatModel(Model):
                                  temperature=temperature,
                                  top_k=top_k,
                                  **kwargs))
+
+    
     self._check_response(response)
     return ChatModelResponse(**response.json())
 
@@ -158,8 +171,8 @@ class ChatModel(Model):
         "parameters": {
             "prompts": [x.model_dump() for x in prompts],
             "temperature": temperature,
-            "top_k": top_k,
-            "max_output_tokens": max_output_tokens,
+            "topK": top_k,
+            "maxOutputTokens": max_output_tokens,
             **kwargs
         }
     }
