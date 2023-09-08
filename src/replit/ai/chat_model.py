@@ -22,8 +22,7 @@ class ChatModel(Model):
   def generate(self,
                prompts: List[ChatSession],
                max_output_tokens: int = 128,
-               temperature: float = 0,
-               top_k: int = 40,
+               temperature: float = 0.0,
                **kwargs) -> ChatModelResponse:
     """
     Makes a generation based on the prompts and parameters.
@@ -36,26 +35,21 @@ class ChatModel(Model):
       ChatModelResponse: The response from the model.
     
     """
-    # x = self.__build_request_payload(
-    #   prompts=prompts,
-    #   max_output_tokens=max_output_tokens,
-    #   temperature=temperature,
-    #   top_k=top_k,
-    #   **kwargs
-    # )
-    # import pdb
-    # pdb.set_trace()
+    # req_json = self.__build_request_payload(
+    #                              prompts=prompts,
+    #                              max_output_tokens=max_output_tokens,
+    #                              temperature=temperature,
+    #                              **kwargs)
     
+    # pdb.set_trace()
     response = requests.post(self.server_url + "/chat",
                              headers=self._get_auth_headers(),
                              json=self.__build_request_payload(
                                  prompts=prompts,
                                  max_output_tokens=max_output_tokens,
                                  temperature=temperature,
-                                 top_k=top_k,
                                  **kwargs))
 
-    
     self._check_response(response)
     return ChatModelResponse(**response.json())
 
@@ -63,7 +57,6 @@ class ChatModel(Model):
                            prompts: List[str],
                            max_output_tokens: int = 128,
                            temperature: float = 0,
-                           top_k: int = 40,
                            **kwargs) -> ChatModelResponse:
     """
     Makes an asynchronous generation based on the prompts and parameters.
@@ -83,7 +76,6 @@ class ChatModel(Model):
               prompts=prompts,
               max_output_tokens=max_output_tokens,
               temperature=temperature,
-              top_k=top_k,
               **kwargs),
       ) as response:
         await self._check_aresponse(response)
@@ -93,7 +85,6 @@ class ChatModel(Model):
                       prompts: List[str],
                       max_output_tokens: int = 128,
                       temperature: float = 0,
-                      top_k: int = 40,
                       **kwargs) -> Iterator[ChatModelResponse]:
     """
     Streams generations based on the prompts and parameters.
@@ -111,7 +102,6 @@ class ChatModel(Model):
         json=self.__build_request_payload(prompts=prompts,
                                           max_output_tokens=max_output_tokens,
                                           temperature=temperature,
-                                          top_k=top_k,
                                           **kwargs),
         stream=True,
     )
@@ -123,7 +113,6 @@ class ChatModel(Model):
                                   prompts: List[str],
                                   max_output_tokens: int = 128,
                                   temperature: float = 0,
-                                  top_k: int = 40,
                                   **kwargs) -> Iterator[ChatModelResponse]:
     """
     Streams asynchronous generations based on the prompts and parameters.
@@ -144,7 +133,6 @@ class ChatModel(Model):
               prompts=prompts,
               max_output_tokens=max_output_tokens,
               temperature=temperature,
-              top_k=top_k,
               **kwargs),
       ) as response:
         await self._check_streaming_aresponse(response)
@@ -152,9 +140,11 @@ class ChatModel(Model):
         async for chunk in self._parse_streaming_aresponse(response):
           yield ChatModelResponse(**chunk)
 
-  def __build_request_payload(self, prompts: List[ChatSession],
-                              max_output_tokens: int, temperature: float,
-                              top_k: int, **kwargs) -> Dict[str, Any]:
+  def __build_request_payload(self, 
+                              prompts: List[ChatSession],
+                              max_output_tokens: int, 
+                              temperature: float,
+                              **kwargs) -> Dict[str, Any]:
     """
     Builds the request payload.
 
@@ -165,13 +155,14 @@ class ChatModel(Model):
     Returns:
       Dict[str, Any]: The request payload.
     """
+    
 
+    
     return {
         "model": self.model_name,
         "parameters": {
             "prompts": [x.model_dump() for x in prompts],
             "temperature": temperature,
-            "topK": top_k,
             "maxOutputTokens": max_output_tokens,
             **kwargs
         }

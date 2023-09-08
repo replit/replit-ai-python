@@ -16,8 +16,8 @@ PROMPT = [
                 ])
 ]
 
-VALID_PARAMETERS = {"temperature": 0.5}
-INVALID_PARAMETERS = {"invalid_parameter": 0.5}
+VALID_KWARGS = {}
+INVALID_KWARGS = {"invalid_parameter": 0.5}
 
 
 # fixture for creating CompletionModel
@@ -27,7 +27,7 @@ def model():
 
 
 def test_chat_model_generate(model):
-  response = model.generate(PROMPT, VALID_PARAMETERS)
+  response = model.generate(PROMPT, **VALID_KWARGS)
 
   assert len(response.responses) == 1
   assert len(response.responses[0].candidates) == 1
@@ -42,12 +42,15 @@ def test_chat_model_generate(model):
 
 def test_chat_model_generate_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    model.generate(PROMPT, INVALID_PARAMETERS)
+    model.generate(PROMPT, **INVALID_KWARGS)
+
+    
+    
 
 
 @pytest.mark.asyncio
 async def test_chat_model_async_generate(model):
-  response = await model.async_generate(PROMPT, VALID_PARAMETERS)
+  response = await model.async_generate(PROMPT, **VALID_KWARGS)
 
   assert len(response.responses) == 1
   assert len(response.responses[0].candidates) == 1
@@ -63,11 +66,11 @@ async def test_chat_model_async_generate(model):
 @pytest.mark.asyncio
 async def test_chat_model_async_generate_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    await model.async_generate(PROMPT, INVALID_PARAMETERS)
+    await model.async_generate(PROMPT, **INVALID_KWARGS)
 
 
 def test_chat_model_generate_stream(model):
-  responses = list(model.generate_stream(PROMPT, VALID_PARAMETERS))
+  responses = list(model.generate_stream(PROMPT, **VALID_KWARGS))
 
   assert len(responses) > 1
   for response in responses:
@@ -80,13 +83,13 @@ def test_chat_model_generate_stream(model):
 
 def test_chat_model_generate_stream_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    list(model.generate_stream(PROMPT, INVALID_PARAMETERS))
+    list(model.generate_stream(PROMPT, **INVALID_KWARGS))
 
 
 @pytest.mark.asyncio
 async def test_chat_model_async_generate_stream(model):
   responses = [
-      res async for res in model.async_generate_stream(PROMPT, VALID_PARAMETERS)
+      res async for res in model.async_generate_stream(PROMPT, **VALID_KWARGS)
   ]
 
   assert len(responses) > 1
@@ -101,5 +104,5 @@ async def test_chat_model_async_generate_stream(model):
 @pytest.mark.asyncio
 async def test_chat_model_async_generate_stream_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    async for _ in model.async_generate_stream(PROMPT, INVALID_PARAMETERS):
+    async for _ in model.async_generate_stream(PROMPT, **INVALID_KWARGS):
       pass
