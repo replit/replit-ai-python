@@ -7,11 +7,20 @@ PROMPT = ["1 + 1 = "]
 LONG_PROMPT = [
     "A very long answer to the question of what is the meaning of life is "
 ]
-VALID_KWARGS = {"topP": 0.1, "topK": 20, "stopSequences": ["\n"], "candidateCount": 5}
+VALID_KWARGS = {
+    "topP": 0.1,
+    "topK": 20,
+    "stopSequences": ["\n"],
+    "candidateCount": 5
+}
 # generate_stream endpoint does not support the candidateCount arg
-VALID_GEN_STREAM_KWARGS = {"max_output_tokens": 128, "temperature": 0, "topP": 0.1, "topK": 20}
+VALID_GEN_STREAM_KWARGS = {
+    "max_output_tokens": 128,
+    "temperature": 0,
+    "topP": 0.1,
+    "topK": 20
+}
 INVALID_KWARGS = {"invalid_parameter": 0.5}
-
 
 
 # fixture for creating CompletionModel
@@ -61,7 +70,8 @@ async def test_completion_model_apredict_invalid_parameter(model):
 
 
 def test_completion_model_predict_stream(model):
-  responses = list(model.generate_stream(LONG_PROMPT, **VALID_GEN_STREAM_KWARGS))
+  responses = list(
+      model.generate_stream(LONG_PROMPT, **VALID_GEN_STREAM_KWARGS))
 
   assert len(responses) > 1
   for response in responses:
@@ -81,7 +91,8 @@ def test_completion_model_generate_stream_invalid_parameter(model):
 @pytest.mark.asyncio
 async def test_completion_model_async_generate_stream(model):
   responses = [
-      res async for res in model.async_generate_stream(LONG_PROMPT, **VALID_GEN_STREAM_KWARGS)
+      res async for res in model.async_generate_stream(
+          LONG_PROMPT, **VALID_GEN_STREAM_KWARGS)
   ]
 
   assert len(responses) > 1
@@ -97,6 +108,5 @@ async def test_completion_model_async_generate_stream(model):
 @pytest.mark.asyncio
 async def test_completion_model_async_generate_stream_invalid_parameter(model):
   with pytest.raises(BadRequestException):
-    async for _ in model.async_generate_stream(LONG_PROMPT, 
-                                              **INVALID_KWARGS):
+    async for _ in model.async_generate_stream(LONG_PROMPT, **INVALID_KWARGS):
       pass

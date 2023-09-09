@@ -100,7 +100,7 @@ def test_chat_model_generate_stream_raises_with_candidate_count_param(model):
 @pytest.mark.asyncio
 async def test_chat_model_async_generate_stream(model):
   responses = [
-      res async for res in model.async_generate_stream(PROMPT, **VALID_KWARGS)
+      res async for res in model.async_generate_stream(PROMPT, **VALID_GEN_STREAM_KWARGS)
   ]
 
   assert len(responses) > 1
