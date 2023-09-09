@@ -31,19 +31,6 @@ class Model:
     """
     self.server_url = kwargs.get('server_url') or get_config().rootUrl
 
-  def generate(self, prompt, parameters):
-    """
-    The method for making predictions.
-    
-    Parameters:
-        prompt: The input prompt for the prediction.
-        parameters: Additional parameters for the prediction.
-        
-    Raises:
-        NotImplementedError: This method must be implemented by subclasses.
-    """
-    raise NotImplementedError(
-        "Subclasses of Model must implement predict(self, prompt, parameters)")
 
   def _check_response(self, response):
     """
