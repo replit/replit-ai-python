@@ -28,7 +28,7 @@ class TextEmbeddingModel:
   def get_embeddings(self, content: List[str]) -> List[TextEmbedding]:
     request = self.__ready_input(content)
     # since this model only takes the content param, we don't pass kwargs
-    response = self.underlying_model.generate(request)
+    response = self.underlying_model.embed(request)
     return self.__ready_response(response)
 
   async def async_get_embeddings(self,
@@ -36,7 +36,7 @@ class TextEmbeddingModel:
     request = self.__ready_input(content)
 
     # since this model only takes the content param, we don't pass kwargs
-    response = await self.underlying_model.async_generate(request)
+    response = await self.underlying_model.async_embed(request)
     return self.__ready_response(response)
 
   def __ready_input(self, content: List[str]) -> List[Dict[str, Any]]:
