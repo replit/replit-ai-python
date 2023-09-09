@@ -27,8 +27,7 @@ IDENTITY_TOKEN = "v2.public.Q2dSMFpYTjBJZ1IwWlhOMHDnO17Eg43zucAMSAHnCS4C1wn4QUCC
 
 @pytest.fixture()
 def setup_pub_key():
-        if "REPL_PUBKEYS" not in os.environ:
-            os.environ["REPL_PUBKEYS"] = json.dumps({"dev:1": PUBLIC_KEY})
+        os.environ["REPL_PUBKEYS"] = json.dumps({"dev:1": PUBLIC_KEY})
 
 @pytest.mark.usefixtures("setup_pub_key")
 def test_read_public_key_from_env() -> None:
