@@ -34,12 +34,6 @@ class ChatModel(Model):
       ChatModelResponse: The response from the model.
     
     """
-    req_json = self.__build_request_payload(
-                                 prompts=prompts,
-                                 max_output_tokens=max_output_tokens,
-                                 temperature=temperature,
-                                 **kwargs)
-    
     response = requests.post(self.server_url + "/chat",
                              headers=self._get_auth_headers(),
                              json=self.__build_request_payload(
@@ -54,7 +48,7 @@ class ChatModel(Model):
   async def async_generate(self,
                            prompts: List[str],
                            max_output_tokens: int = 128,
-                           temperature: float = 0,
+                           temperature: float = 0.0,
                            **kwargs) -> ChatModelResponse:
     """
     Makes an asynchronous generation based on the prompts and parameters.
@@ -82,7 +76,7 @@ class ChatModel(Model):
   def generate_stream(self,
                       prompts: List[str],
                       max_output_tokens: int = 128,
-                      temperature: float = 0,
+                      temperature: float = 0.0,
                       **kwargs) -> Iterator[ChatModelResponse]:
     """
     Streams generations based on the prompts and parameters.
@@ -110,7 +104,7 @@ class ChatModel(Model):
   async def async_generate_stream(self,
                                   prompts: List[str],
                                   max_output_tokens: int = 128,
-                                  temperature: float = 0,
+                                  temperature: float = 0.0,
                                   **kwargs) -> Iterator[ChatModelResponse]:
     """
     Streams asynchronous generations based on the prompts and parameters.

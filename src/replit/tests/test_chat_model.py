@@ -30,7 +30,6 @@ INVALID_KWARGS = {"invalid_parameter": 0.5}
 def model():
   return ChatModel("chat-bison")
 
-  
 def test_chat_model_generate(model):
   response = model.generate(PROMPT, **VALID_KWARGS)
 
@@ -44,6 +43,18 @@ def test_chat_model_generate(model):
   choice_metadata = candidate.metadata
   assert choice_metadata['safetyAttributes']['blocked'] is False
 
+def test_chat_model_generate_no_kwargs(model):
+  response = model.generate(PROMPT)
+
+  assert len(response.responses) == 1
+  assert len(response.responses[0].candidates) == 1
+
+  candidate = response.responses[0].candidates[0]
+
+  assert len(candidate.message.content) > 10
+
+  choice_metadata = candidate.metadata
+  assert choice_metadata['safetyAttributes']['blocked'] is False
 
 def test_chat_model_generate_invalid_parameter(model):
   with pytest.raises(BadRequestException):
