@@ -44,7 +44,7 @@ class ChatSession:
     self.add_user_message(message)
     predictParams = dict(**self.parameters, **kwargs)
     session = self.get_chat_session()
-    response = self.underlying_model.generate([session],
+    response = self.underlying_model.chat([session],
                                              **ready_parameters(predictParams))
     self.add_model_message(self.__get_response_content(response))
     return self.__ready_response(response)
@@ -53,7 +53,7 @@ class ChatSession:
     self.add_user_message(message)
     predictParams = dict(**self.parameters, **kwargs)
     session = self.get_chat_session()
-    response = await self.underlying_model.async_generate(
+    response = await self.underlying_model.async_chat(
         [session], **ready_parameters(predictParams))
     self.add_model_message(self.__get_response_content(response))
     return self.__ready_response(response)
@@ -63,7 +63,7 @@ class ChatSession:
     predictParams = dict(**self.parameters, **kwargs)
     session = self.get_chat_session()
 
-    response = self.underlying_model.generate_stream(
+    response = self.underlying_model.stream_chat(
         [session], **ready_parameters(predictParams))
     message = ""
     for chunk in response:
@@ -76,7 +76,7 @@ class ChatSession:
     newMessage = self.add_user_message(message)
     predictParams = dict(**self.parameters, **kwargs)
     session = self.get_chat_session()
-    response = self.underlying_model.async_generate_stream(
+    response = self.underlying_model.async_stream_chat(
         [session], **ready_parameters(predictParams))
     message = ""
     async for chunk in response:
