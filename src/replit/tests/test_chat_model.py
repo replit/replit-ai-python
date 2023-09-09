@@ -30,7 +30,7 @@ INVALID_KWARGS = {"invalid_parameter": 0.5}
 def model():
   return ChatModel("chat-bison")
 
-
+  
 def test_chat_model_generate(model):
   response = model.generate(PROMPT, **VALID_KWARGS)
 
