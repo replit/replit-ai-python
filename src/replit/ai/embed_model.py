@@ -20,7 +20,7 @@ class EmbedModel(Model):
     self.model_name = model_name
 
   def generate(self, content: List[Dict[str, Any]],
-            parameters: Dict[str, Any]) -> EmbeddingModelResponse:
+            **kwargs) -> EmbeddingModelResponse:
     """
     Makes a prediction based on the content and parameters.
 
@@ -34,13 +34,13 @@ class EmbedModel(Model):
     response = requests.post(
         self.server_url + "/embedding",
         headers=self._get_auth_headers(),
-        json=self.__build_request_payload(content, parameters),
+        json=self.__build_request_payload(content, **kwargs),
     )
     self._check_response(response)
     return EmbeddingModelResponse(**response.json())
 
   async def async_generate(self, content: List[Dict[str, Any]],
-                   parameters: Dict[str, Any]) -> EmbeddingModelResponse:
+                   **kwargs: Dict[str, Any]) -> EmbeddingModelResponse:
     """
     Makes an asynchronous embedding generation based on the content and parameters.
 
@@ -55,13 +55,13 @@ class EmbedModel(Model):
       async with session.post(
           self.server_url + "/embedding",
           headers=self._get_auth_headers(),
-          json=self.__build_request_payload(content, parameters),
+          json=self.__build_request_payload(content, **kwargs),
       ) as response:
         await self._check_aresponse(response)
         return EmbeddingModelResponse(**await response.json())
 
   def __build_request_payload(self, content: List[Dict[str, Any]],
-                              parameters: Dict[str, Any]) -> Dict[str, Any]:
+                              **kwargs: Dict[str, Any]) -> Dict[str, Any]:
     """
     Builds the request payload.
 
@@ -77,6 +77,6 @@ class EmbedModel(Model):
         "model": self.model_name,
         "parameters": {
             "content": content,
-            **parameters
+            **kwargs
         }
     }
