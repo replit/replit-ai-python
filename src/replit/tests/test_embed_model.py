@@ -12,8 +12,8 @@ def model():
   return EmbedModel("textembedding-gecko")
 
 
-def test_embed_model_generate(model):
-  response = model.generate(CONTENT)
+def test_embed_model_embed(model):
+  response = model.embed(CONTENT)
   assert len(response.embeddings) == 1
 
   embedding = response.embeddings[0]
@@ -27,8 +27,8 @@ def test_embed_model_generate(model):
 
 
 @pytest.mark.asyncio
-async def test_embed_model_async_generate(model):
-  response = await model.async_generate(CONTENT)
+async def test_embed_model_async_embed(model):
+  response = await model.async_embed(CONTENT)
   assert len(response.embeddings) == 1
 
   embedding = response.embeddings[0]

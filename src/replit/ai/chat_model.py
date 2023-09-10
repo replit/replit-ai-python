@@ -18,7 +18,7 @@ class ChatModel(Model):
     super().__init__(**kwargs)
     self.model_name = model_name
 
-  def generate(self,
+  def chat(self,
                prompts: List[ChatSession],
                max_output_tokens: int = 1024,
                temperature: float = 0.0,
@@ -45,7 +45,7 @@ class ChatModel(Model):
     self._check_response(response)
     return ChatModelResponse(**response.json())
 
-  async def async_generate(self,
+  async def async_chat(self,
                            prompts: List[str],
                            max_output_tokens: int = 1024,
                            temperature: float = 0.0,
@@ -73,7 +73,7 @@ class ChatModel(Model):
         await self._check_aresponse(response)
         return ChatModelResponse(**await response.json())
 
-  def generate_stream(self,
+  def stream_chat(self,
                       prompts: List[str],
                       max_output_tokens: int = 1024,
                       temperature: float = 0.0,
@@ -101,7 +101,7 @@ class ChatModel(Model):
     for chunk in self._parse_streaming_response(response):
       yield ChatModelResponse(**chunk)
 
-  async def async_generate_stream(self,
+  async def async_stream_chat(self,
                                   prompts: List[str],
                                   max_output_tokens: int = 1024,
                                   temperature: float = 0.0,

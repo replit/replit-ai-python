@@ -19,7 +19,7 @@ class CompletionModel(Model):
     super().__init__(**kwargs)
     self.model_name = model_name
 
-  def generate(self,
+  def complete(self,
                prompts: List[str],
                max_output_tokens: int = 1024,
                temperature: float = 0.0,
@@ -45,7 +45,7 @@ class CompletionModel(Model):
     self._check_response(response)
     return CompletionModelResponse(**response.json())
 
-  async def async_generate(self,
+  async def async_complete(self,
                            prompts: List[str],
                            max_output_tokens: int = 1024,
                            temperature: float = 0.0,
@@ -73,7 +73,7 @@ class CompletionModel(Model):
         await self._check_aresponse(response)
         return CompletionModelResponse(**await response.json())
 
-  def generate_stream(
+  def stream_complete(
       self,
       prompts: List[str],
       max_output_tokens: int = 1024,
@@ -102,7 +102,7 @@ class CompletionModel(Model):
     for chunk in self._parse_streaming_response(response):
       yield CompletionModelResponse(**chunk)
 
-  async def async_generate_stream(
+  async def async_stream_complete(
       self, prompts: List[str],
       max_output_tokens: int = 1024,
       temperature: float = 0.0,
