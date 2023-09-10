@@ -20,7 +20,7 @@ class ChatModel(Model):
 
   def generate(self,
                prompts: List[ChatSession],
-               max_output_tokens: int = 128,
+               max_output_tokens: int = 1024,
                temperature: float = 0.0,
                **kwargs) -> ChatModelResponse:
     """
@@ -47,7 +47,7 @@ class ChatModel(Model):
 
   async def async_generate(self,
                            prompts: List[str],
-                           max_output_tokens: int = 128,
+                           max_output_tokens: int = 1024,
                            temperature: float = 0.0,
                            **kwargs) -> ChatModelResponse:
     """
@@ -75,7 +75,7 @@ class ChatModel(Model):
 
   def generate_stream(self,
                       prompts: List[str],
-                      max_output_tokens: int = 128,
+                      max_output_tokens: int = 1024,
                       temperature: float = 0.0,
                       **kwargs) -> Iterator[ChatModelResponse]:
     """
@@ -103,7 +103,7 @@ class ChatModel(Model):
 
   async def async_generate_stream(self,
                                   prompts: List[str],
-                                  max_output_tokens: int = 128,
+                                  max_output_tokens: int = 1024,
                                   temperature: float = 0.0,
                                   **kwargs) -> Iterator[ChatModelResponse]:
     """

@@ -21,7 +21,7 @@ class CompletionModel(Model):
 
   def generate(self,
                prompts: List[str],
-               max_output_tokens: int = 128,
+               max_output_tokens: int = 1024,
                temperature: float = 0.0,
                **kwargs: Dict[str, Any]) -> CompletionModelResponse:
     """
@@ -47,7 +47,7 @@ class CompletionModel(Model):
 
   async def async_generate(self,
                            prompts: List[str],
-                           max_output_tokens: int = 128,
+                           max_output_tokens: int = 1024,
                            temperature: float = 0.0,
                            **kwargs) -> CompletionModelResponse:
     """
@@ -76,7 +76,7 @@ class CompletionModel(Model):
   def generate_stream(
       self,
       prompts: List[str],
-      max_output_tokens: int = 128,
+      max_output_tokens: int = 1024,
       temperature: float = 0.0,
       **kwargs: Dict[str, Any]) -> Iterator[CompletionModelResponse]:
     """
@@ -104,7 +104,7 @@ class CompletionModel(Model):
 
   async def async_generate_stream(
       self, prompts: List[str],
-      max_output_tokens: int = 128,
+      max_output_tokens: int = 1024,
       temperature: float = 0.0,
       **kwargs: Dict[str, Any]) -> Iterator[CompletionModelResponse]:
     """
