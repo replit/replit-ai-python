@@ -4,14 +4,14 @@ import json
 import os
 import unittest
 from unittest.mock import patch
-from unittest import mock
+from unittest.mock import Mock
 import pyseto
 import pytest
 from replit.ai.identity import verify
 from replit.ai.identity.sign import SigningAuthority
 from replit.ai.replit_identity_token_manager import ReplitIdentityTokenManager
+
 from replit.ai import config
-from unittest import mock
 
 PUBLIC_KEY = "on0FkSmEC+ce40V9Vc4QABXSx6TXo+lhp99b6Ka0gro="
 
@@ -27,39 +27,41 @@ IDENTITY_PRIVATE_KEY = "k2.secret.6sHU27WoRIaspIOVaShpuZM33ozpfFyI2THfO8fmSX6xiA
 IDENTITY_TOKEN = "v2.public.Q2dSMFpYTjBJZ1IwWlhOMHDnO17Eg43zucAMSAHnCS4C1wn4QUCCOcr-Pggw5SV1KnbOXq8RcQE5if6pMcbJ6lmRWcdoHq5CV9jqyRrUlwo.R0FFaUJtTnZibTFoYmhLckFuWXlMbkIxWW14cFl5NVJNbVF6VTFkd2VHRnRXbmRrTVd4U1lXMDViRm96YkVKU1ZrNUZVVmRzYTA1VmQzSlRSVlp2VWtaa2RGbFZVa3BSVmtwMlVUQmtRbFpYUmtOYU1qbEdXa1ZrVjJWdFVrUlRWRVpvWld0c01Wa3dhRmRoVjBwSVlrZHdUV0pyTldGWGFrWkRUVEEwZVU5WGVGTk5hbFpSVmpGVk5HUkhTbFpQVm1oc1lXdHdORlJVUW5kaFZrbDZVV3hvYUdKWFVubFVWekZyWlZaUmVVOVZhRnBXVkVaTFZtcENjMlZWTVZkV1ZEQkRUbVpoYkhkMk5EUm9SRkZQTFVKWlJDMURWSEUxYVdJeFQzVlVlamxIWW5WTlFVVnFURFExUVVwclZXNW9kR2hxVFZOVVRtOVZSRVphWDBsaVUyTjFjekoxWW05aVowNU1MV2RRVlRGRmVVOTFUVzlHTGxJd1JrWmhWVXAwVkc1YWFXSlVSbTlaYldSMlVteHdTRlpxU2xCaGExVTU"  # noqa: E501,B950,S106 # line too long
 
 
-@pytest.fixture()
 def setup_pub_key():
-  os.environ["REPL_PUBKEYS"] = json.dumps({"dev:1": PUBLIC_KEY})
+  return json.dumps({"dev:1": PUBLIC_KEY})
 
 
-@pytest.mark.usefixtures("setup_pub_key")
 def test_read_public_key_from_env() -> None:
   """Test read_public_key_from_env."""
-  pubkey = verify.read_public_key_from_env("dev:1", "goval")
-  assert isinstance(pubkey, pyseto.versions.v2.V2Public)
+  with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
+    pubkey = verify.read_public_key_from_env("dev:1", "goval")
+    assert isinstance(pubkey, pyseto.versions.v2.V2Public)
 
 
 def test_signing_authority() -> None:
   """Test SigningAuthority."""
-  gsa = SigningAuthority(
-      marshaled_private_key=IDENTITY_PRIVATE_KEY,
-      marshaled_identity=IDENTITY_TOKEN,
-      replid="test",
-  )
-  signed_token = gsa.sign("audience")
+  with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
+    gsa = SigningAuthority(
+        marshaled_private_key=IDENTITY_PRIVATE_KEY,
+        marshaled_identity=IDENTITY_TOKEN,
+        replid="test",
+    )
+    signed_token = gsa.sign("audience")
 
-  verify.verify_identity_token(
-      identity_token=signed_token,
-      audience="audience",
-  )
+    verify.verify_identity_token(
+        identity_token=signed_token,
+        audience="audience",
+    )
 
 
 def test_verify_identity_token() -> None:
   """Test verify_identity_token."""
-  verify.verify_identity_token(
-      identity_token=IDENTITY_TOKEN,
-      audience="test",
-  )
+  with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
+    verify.verify_identity_token(
+        identity_token=IDENTITY_TOKEN,
+        audience="test",
+    )
+
 
 def test_get_interactive_token() -> None:
   replit_identity_token_manager = ReplitIdentityTokenManager()

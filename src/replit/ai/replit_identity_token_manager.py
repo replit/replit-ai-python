@@ -7,8 +7,10 @@ import requests
 from replit.ai.config import get_config
 from replit.ai.identity.sign import SigningAuthority
 
+
 class MissingEnvironmentVariable(Exception):
-    pass
+  pass
+
 
 class ReplitIdentityTokenManager():
 
@@ -60,11 +62,12 @@ class ReplitIdentityTokenManager():
     return json.loads(response.content)['identityToken']
 
   @classmethod
-  def get_env_var(cls,var:str) -> Optional[str]:
+  def get_env_var(cls, var: str) -> Optional[str]:
     if var in os.environ:
       return os.environ[var]
     else:
-      raise MissingEnvironmentVariable(f"Did not find the environment variable: {var}")
+      raise MissingEnvironmentVariable(
+          f"Did not find the environment variable: {var}")
 
   def get_interactive_token(self) -> str:
     """Generates and returns an identity token"
@@ -73,9 +76,9 @@ class ReplitIdentityTokenManager():
       str: Interactive token.
     """
     gsa = SigningAuthority(
-      marshaled_private_key=self.get_env_var("REPL_IDENTITY_KEY"),
-      marshaled_identity=self.get_env_var("REPL_IDENTITY"),
-      replid=self.get_env_var("REPL_ID"),
+        marshaled_private_key=self.get_env_var("REPL_IDENTITY_KEY"),
+        marshaled_identity=self.get_env_var("REPL_IDENTITY"),
+        replid=self.get_env_var("REPL_ID"),
     )
     signed_token = gsa.sign(audience=get_config().audience)
     return signed_token

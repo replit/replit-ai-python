@@ -32,7 +32,7 @@ class Model:
                           Defaults to the value in the configuration.
     """
     self.server_url = kwargs.get('server_url') or get_config().rootUrl
-    self.auth = ReplitIdentityTokenManager(kwargs.get('server_url') if kwargs.get('server_url') else 300)
+    self.auth = ReplitIdentityTokenManager()
 
   def _check_response(self, response):
     """
