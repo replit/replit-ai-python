@@ -1,7 +1,6 @@
-from replit.ai.google.structs import (
+from ...structs import (
     TextGenerationResponse as TextGenerationResponse,
 )
-
 from .chat_model import (
     ChatMessage as ChatMessage,
 )
