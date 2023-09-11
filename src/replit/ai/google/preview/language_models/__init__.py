@@ -1,8 +1,16 @@
-from .chat_model import (ChatModel as ChatModel, 
-                         InputOutputTextPair as
-                         InputOutputTextPair, 
-                         ChatMessage as ChatMessage,
-                         ChatSession as ChatSession,
-                         )
+from src.replit.ai.google.structs import (
+    TextGenerationResponse as TextGenerationResponse,
+)
 
-from src.replit.ai.google.structs import TextGenerationResponse as TextGenerationResponse
+from .chat_model import (
+    ChatMessage as ChatMessage,
+)
+from .chat_model import (
+    ChatModel as ChatModel,
+)
+from .chat_model import (
+    ChatSession as ChatSession,
+)
+from .chat_model import (
+    InputOutputTextPair as InputOutputTextPair,
+)
