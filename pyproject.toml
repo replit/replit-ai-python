@@ -18,7 +18,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8, <3.12"
+python = ">=3.8, <4.0"
 requests = "^2.31.0"
 pydantic = "^2.3.0"
 aiohttp = "^3.8.5"
