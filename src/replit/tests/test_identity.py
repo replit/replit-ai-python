@@ -64,10 +64,15 @@ def test_verify_identity_token() -> None:
 
 
 def test_get_interactive_token() -> None:
-  replit_identity_token_manager = ReplitIdentityTokenManager()
-  signed_token = replit_identity_token_manager.get_interactive_token()
+  with patch.dict(os.environ, 
+                  {"REPL_PUBKEYS": setup_pub_key(),
+                   "REPL_IDENTITY":IDENTITY_TOKEN,
+                   "REPL_IDENTITY_KEY":IDENTITY_PRIVATE_KEY,
+                   "REPL_ID":"test"}):
+    replit_identity_token_manager = ReplitIdentityTokenManager()
+    signed_token = replit_identity_token_manager.get_interactive_token()
 
-  verify.verify_identity_token(
-      identity_token=signed_token,
-      audience='modelfarm@replit.com',
-  )
+    verify.verify_identity_token(
+        identity_token=signed_token,
+        audience='modelfarm@replit.com',
+    )
