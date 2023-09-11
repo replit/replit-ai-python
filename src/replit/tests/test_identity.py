@@ -11,7 +11,7 @@ from replit.ai.identity import verify
 from replit.ai.identity.sign import SigningAuthority
 from replit.ai.replit_identity_token_manager import ReplitIdentityTokenManager
 from replit.ai import config
-from unittest.mock import Mock
+from unittest import mock
 
 PUBLIC_KEY = "on0FkSmEC+ce40V9Vc4QABXSx6TXo+lhp99b6Ka0gro="
 
@@ -61,27 +61,8 @@ def test_verify_identity_token() -> None:
       audience="test",
   )
 
-
-def setup_identities(var_id) -> str:
-  if var_id == "REPL_IDENTITY_KEY":
-    return IDENTITY_PRIVATE_KEY
-  if var_id == "REPL_IDENTITY":
-    return IDENTITY_TOKEN
-  if var_id == "REPL_ID":
-    return "test"
-
-
 def test_get_interactive_token() -> None:
-  ReplitIdentityTokenManager.get_env_var = Mock()
-  ReplitIdentityTokenManager.get_env_var.side_effect = setup_identities
-  mock_config = Mock(spec=config.Config())
-  mock_config.rootUrl = "https://production-modelfarm.replit.com"
-  mock_config.audience = "mod@replit.com"
-  get_config = Mock()
-  get_config.side_effect = mock_config
-
   replit_identity_token_manager = ReplitIdentityTokenManager()
-
   signed_token = replit_identity_token_manager.get_interactive_token()
 
   verify.verify_identity_token(
