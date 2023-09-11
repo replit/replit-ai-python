@@ -22,14 +22,16 @@ class CompletionModel(Model):
   def complete(self,
                prompts: List[str],
                max_output_tokens: int = 1024,
-               temperature: float = 0.0,
+               temperature: float = 0.2,
                **kwargs: Dict[str, Any]) -> CompletionModelResponse:
     """
     Makes a generation based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
-      parameters (Dict[str, Any]): The dictionary of parameters.
+      max_output_tokens (int): The maximum number of tokens to generate.
+        Defaults to 1024.
+      temperature (float): The temperature of the generation. Defaults to 0.2.
 
     Returns:
       CompletionModelResponse: The response from the model.
@@ -48,14 +50,16 @@ class CompletionModel(Model):
   async def async_complete(self,
                            prompts: List[str],
                            max_output_tokens: int = 1024,
-                           temperature: float = 0.0,
+                           temperature: float = 0.2,
                            **kwargs) -> CompletionModelResponse:
     """
     Makes an asynchronous generation based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
-      parameters (Dict[str, Any]): The dictionary of parameters.
+      max_output_tokens (int): The maximum number of tokens to generate.
+        Defaults to 1024.
+      temperature (float): The temperature of the generation. Defaults to 0.2.
 
     Returns:
       CompletionModelResponse: The response from the model.
@@ -77,14 +81,16 @@ class CompletionModel(Model):
       self,
       prompts: List[str],
       max_output_tokens: int = 1024,
-      temperature: float = 0.0,
+      temperature: float = 0.2,
       **kwargs: Dict[str, Any]) -> Iterator[CompletionModelResponse]:
     """
     Streams generations based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
-      parameters (Dict[str, Any]): The dictionary of parameters.
+      max_output_tokens (int): The maximum number of tokens to generate.
+        Defaults to 1024.
+      temperature (float): The temperature of the generation. Defaults to 0.2.
 
     Returns:
       Iterator[CompletionModelResponse]: An iterator of the responses from the model.
@@ -105,14 +111,16 @@ class CompletionModel(Model):
   async def async_stream_complete(
       self, prompts: List[str],
       max_output_tokens: int = 1024,
-      temperature: float = 0.0,
+      temperature: float = 0.2,
       **kwargs: Dict[str, Any]) -> Iterator[CompletionModelResponse]:
     """
     Streams asynchronous predictions based on the prompts and parameters.
 
     Args:
       prompts (List[str]): The list of prompts.
-      parameters (Dict[str, Any]): The dictionary of parameters.
+      max_output_tokens (int): The maximum number of tokens to generate.
+        Defaults to 1024.
+      temperature (float): The temperature of the generation. Defaults to 0.2.
 
     Returns:
       Iterator[CompletionModelResponse]: An iterator of the responses from the model.
@@ -140,7 +148,9 @@ class CompletionModel(Model):
 
     Args:
       prompts (List[str]): The list of prompts.
-      parameters (Dict[str, Any]): The dictionary of parameters.
+      max_output_tokens (int): The maximum number of tokens to generate.
+        Defaults to 1024.
+      temperature (float): The temperature of the generation. Defaults to 0.2.
 
     Returns:
       Dict[str, Any]: The request payload.
