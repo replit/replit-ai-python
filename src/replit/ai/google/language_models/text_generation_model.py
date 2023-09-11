@@ -11,7 +11,7 @@ class TextGenerationModel:
 
   Methods:
       from_pretrained - Loads a pretrained model using its identifier
-      predict - Generates a human-like text given an initial prompt.
+      predict - completes a human-like text given an initial prompt.
       async_predict - Async version of the predict method.
   """
 
@@ -34,31 +34,31 @@ class TextGenerationModel:
 
   def predict(self, prompt: str, **kwargs) -> TextGenerationResponse:
     """
-    Generates a human-like text given an initial prompt.
+    completes a human-like text given an initial prompt.
 
     Args:
         prompt (str): The initial text to start the generation.
 
     Returns:
-        TextGenerationResponse: The model's response containing the generated text.
+        TextGenerationResponse: The model's response containing the completed text.
     """
     parameters = ready_parameters(kwargs)
-    response = self.underlying_model.generate([prompt], parameters)
+    response = self.underlying_model.complete([prompt], **parameters)
     return self.__ready_response(response)
 
   def predict_streaming(self, prompt: str,
                         **kwargs) -> Iterator[TextGenerationResponse]:
     """
-    Generates a human-like text given an initial prompt.
+    completes a human-like text given an initial prompt.
 
     Args:
         prompt (str): The initial text to start the generation.
 
     Returns:
-        TextGenerationResponse: The model's response containing the generated text.
+        TextGenerationResponse: The model's response containing the completed text.
     """
     parameters = ready_parameters(kwargs)
-    response = self.underlying_model.generate_stream([prompt], parameters)
+    response = self.underlying_model.stream_complete([prompt], **parameters)
     for x in response:
       yield self.__ready_response(x)
 
@@ -71,10 +71,10 @@ class TextGenerationModel:
         prompt (str): The initial text to start the generation.
 
     Returns:
-        TextGenerationResponse: The model's response containing the generated text.
+        TextGenerationResponse: The model's response containing the completed text.
     """
     parameters = ready_parameters(kwargs)
-    response = await self.underlying_model.async_generate([prompt], parameters)
+    response = await self.underlying_model.async_complete([prompt], **parameters)
     return self.__ready_response(response)
 
   async def async_predict_streaming(self, prompt: str,
@@ -86,10 +86,10 @@ class TextGenerationModel:
         prompt (str): The initial text to start the generation.
 
     Returns:
-        TextGenerationResponse: The model's response containing the generated text.
+        TextGenerationResponse: The model's response containing the completed text.
     """
     parameters = ready_parameters(kwargs)
-    response = self.underlying_model.async_generate_stream([prompt], parameters)
+    response = self.underlying_model.async_stream_complete([prompt], **parameters)
     async for x in response:
       yield self.__ready_response(x)
 

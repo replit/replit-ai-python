@@ -20,7 +20,7 @@ class Model:
   Methods:
       predict(prompt, parameters): Abstract method to be implemented by subclasses.
   """
-  
+
   server_url: str
 
   def __init__(self, **kwargs):
@@ -33,20 +33,6 @@ class Model:
     """
     self.server_url = kwargs.get('server_url') or get_config().rootUrl
     self.auth = ReplitIdentityTokenManager(kwargs.get('server_url') if kwargs.get('server_url') else 300)
-
-  def generate(self, prompt, parameters):
-    """
-    The method for making predictions.
-    
-    Parameters:
-        prompt: The input prompt for the prediction.
-        parameters: Additional parameters for the prediction.
-        
-    Raises:
-        NotImplementedError: This method must be implemented by subclasses.
-    """
-    raise NotImplementedError(
-        "Subclasses of Model must implement predict(self, prompt, parameters)")
 
   def _check_response(self, response):
     """
@@ -153,11 +139,11 @@ class Model:
           json_obj, end_idx = result
 
           yield json_obj
-
           # Update start index for next iteration
           start_idx = end_idx
         except json.JSONDecodeError:
           break
+      buffer = buffer[start_idx:]
 
   async def _parse_streaming_aresponse(self, response) -> Iterator[any]:
     """
@@ -192,3 +178,4 @@ class Model:
           start_idx = end_idx
         except json.JSONDecodeError:
           break
+      buffer = buffer[start_idx:]
