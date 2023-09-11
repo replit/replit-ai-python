@@ -1,11 +1,13 @@
-from requests import JSONDecodeError
-from .replit_identity_token_manager import replit_identity_token_manager
-from replit.ai.config import get_config
-from .exceptions import InvalidResponseException, BadRequestException
+import json
+from typing import Iterator, List, Union
+
 import aiohttp
 import requests
-from typing import Union, Iterator, List
-import json
+from replit.ai.config import get_config
+from requests import JSONDecodeError
+
+from .exceptions import BadRequestException, InvalidResponseException
+from .replit_identity_token_manager import ReplitIdentityTokenManager
 
 
 class Model:
@@ -30,6 +32,7 @@ class Model:
                           Defaults to the value in the configuration.
     """
     self.server_url = kwargs.get('server_url') or get_config().rootUrl
+    self.auth = ReplitIdentityTokenManager()
 
   def _check_response(self, response):
     """
@@ -108,7 +111,7 @@ class Model:
     Returns:
         dict: A dictionary containing the Authorization header.
     """
-    token = replit_identity_token_manager.get_token()
+    token = self.auth.get_token()
     return {"Authorization": f"Bearer {token}"}
 
   def _parse_streaming_response(self, response) -> Iterator[any]:

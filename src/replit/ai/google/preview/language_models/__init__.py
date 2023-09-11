@@ -1,4 +1,4 @@
-from src.replit.ai.google.structs import (
+from replit.ai.google.structs import (
     TextGenerationResponse as TextGenerationResponse,
 )
 
