@@ -4,6 +4,7 @@ import requests
 from .structs import ChatModelResponse, ChatSession
 import aiohttp
 
+
 class ChatModel(Model):
   """Handles predictions from a chat model."""
 
@@ -19,10 +20,10 @@ class ChatModel(Model):
     self.model_name = model_name
 
   def chat(self,
-               prompts: List[ChatSession],
-               max_output_tokens: int = 1024,
-               temperature: float = 0.0,
-               **kwargs) -> ChatModelResponse:
+           prompts: List[ChatSession],
+           max_output_tokens: int = 1024,
+           temperature: float = 0.0,
+           **kwargs) -> ChatModelResponse:
     """
     Makes a generation based on the prompts and parameters.
 
@@ -46,10 +47,10 @@ class ChatModel(Model):
     return ChatModelResponse(**response.json())
 
   async def async_chat(self,
-                           prompts: List[str],
-                           max_output_tokens: int = 1024,
-                           temperature: float = 0.0,
-                           **kwargs) -> ChatModelResponse:
+                       prompts: List[str],
+                       max_output_tokens: int = 1024,
+                       temperature: float = 0.0,
+                       **kwargs) -> ChatModelResponse:
     """
     Makes an asynchronous generation based on the prompts and parameters.
 
@@ -74,10 +75,10 @@ class ChatModel(Model):
         return ChatModelResponse(**await response.json())
 
   def stream_chat(self,
-                      prompts: List[str],
-                      max_output_tokens: int = 1024,
-                      temperature: float = 0.0,
-                      **kwargs) -> Iterator[ChatModelResponse]:
+                  prompts: List[str],
+                  max_output_tokens: int = 1024,
+                  temperature: float = 0.0,
+                  **kwargs) -> Iterator[ChatModelResponse]:
     """
     Streams generations based on the prompts and parameters.
 
@@ -102,10 +103,10 @@ class ChatModel(Model):
       yield ChatModelResponse(**chunk)
 
   async def async_stream_chat(self,
-                                  prompts: List[str],
-                                  max_output_tokens: int = 1024,
-                                  temperature: float = 0.0,
-                                  **kwargs) -> Iterator[ChatModelResponse]:
+                              prompts: List[str],
+                              max_output_tokens: int = 1024,
+                              temperature: float = 0.0,
+                              **kwargs) -> Iterator[ChatModelResponse]:
     """
     Streams asynchronous generations based on the prompts and parameters.
 
@@ -132,10 +133,8 @@ class ChatModel(Model):
         async for chunk in self._parse_streaming_aresponse(response):
           yield ChatModelResponse(**chunk)
 
-  def __build_request_payload(self, 
-                              prompts: List[ChatSession],
-                              max_output_tokens: int, 
-                              temperature: float,
+  def __build_request_payload(self, prompts: List[ChatSession],
+                              max_output_tokens: int, temperature: float,
                               **kwargs) -> Dict[str, Any]:
     """
     Builds the request payload.
@@ -147,9 +146,7 @@ class ChatModel(Model):
     Returns:
       Dict[str, Any]: The request payload.
     """
-    
 
-    
     return {
         "model": self.model_name,
         "parameters": {
