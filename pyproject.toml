@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "replit.ai"
-version = "0.0.8"
+version = "0.0.8a"
 description = "A library for interacting with AI features of replit"
 authors = ["Repl.it <contact@repl.it>"]
 license = "ISC"
