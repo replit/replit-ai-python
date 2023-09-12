@@ -1,4 +1,4 @@
-from replit.ai.google.language_models import TextEmbeddingModel
+from replit.ai.modelfarm.google.language_models import TextEmbeddingModel
 import pytest
 
 

@@ -1,6 +1,6 @@
-from replit.ai.google.preview.language_models import ChatModel, InputOutputTextPair
+from replit.ai.modelfarm.google.preview.language_models import ChatModel, InputOutputTextPair
 import pytest
-from replit.ai.google.structs import TextGenerationResponse
+from replit.ai.modelfarm.google.structs import TextGenerationResponse
 
 parameters = {
     "temperature": 0.5,  # Temperature controls the degree of randomness in token selection.

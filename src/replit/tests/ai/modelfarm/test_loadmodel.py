@@ -1,4 +1,4 @@
-from replit.ai import CompletionModel
+from replit.ai.modelfarm import CompletionModel
 
 
 def test_loadmodel_complete_endpoint():

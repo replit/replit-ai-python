@@ -13,10 +13,10 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
-from replit.ai.identity.goval.api import (
+from replit.ai.modelfarm.identity.goval.api import (
     client_pb2 as replit_dot_goval_dot_api_dot_client__pb2,
 )
-from replit.ai.identity.goval.api.repl import (
+from replit.ai.modelfarm.identity.goval.api.repl import (
     repl_pb2 as replit_dot_goval_dot_api_dot_repl_dot_repl__pb2,
 )
 

@@ -3,7 +3,7 @@ from typing import Iterator, List, Union
 
 import aiohttp
 import requests
-from replit.ai.config import get_config
+from replit.ai.modelfarm.config import get_config
 from requests import JSONDecodeError
 
 from .exceptions import BadRequestException, InvalidResponseException

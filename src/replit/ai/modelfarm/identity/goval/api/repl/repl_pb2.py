@@ -12,7 +12,7 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-from replit.ai.identity.goval.api.features import (
+from replit.ai.modelfarm.identity.goval.api.features import (
     features_pb2 as replit_dot_goval_dot_api_dot_features_dot_features__pb2,
 )
 

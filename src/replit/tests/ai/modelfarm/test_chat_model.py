@@ -1,7 +1,7 @@
 import pytest
-from replit.ai import ChatModel
-from replit.ai.exceptions import BadRequestException
-from replit.ai.structs import ChatSession, ChatMessage, ChatExample
+from replit.ai.modelfarm import ChatModel
+from replit.ai.modelfarm.exceptions import BadRequestException
+from replit.ai.modelfarm.structs import ChatSession, ChatMessage, ChatExample
 from collections import Counter
 
 # module level constants
