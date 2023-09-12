@@ -1,8 +1,10 @@
 class BadRequestException(ValueError):
-  """Exception raised for a bad request."""
-  pass
+    """Exception raised for a bad request."""
+
+    pass
 
 
 class InvalidResponseException(ValueError):
-  """Exception raised for an invalid response."""
-  pass
+    """Exception raised for an invalid response."""
+
+    pass
