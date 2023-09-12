@@ -37,7 +37,7 @@ class ChatModel(Model):
       ChatModelResponse: The response from the model.
     
     """
-    response = requests.post(self.server_url + "/chat",
+    response = requests.post(self.server_url + "/v1beta/chat",
                              headers=self._get_auth_headers(),
                              json=self.__build_request_payload(
                                  prompts=prompts,
@@ -67,7 +67,7 @@ class ChatModel(Model):
     """
     async with aiohttp.ClientSession() as session:
       async with session.post(
-          self.server_url + "/chat",
+          self.server_url + "/v1beta/chat",
           headers=self._get_auth_headers(),
           json=self.__build_request_payload(
               prompts=prompts,
@@ -96,7 +96,7 @@ class ChatModel(Model):
       Iterator[ChatModelResponse]: An iterator of the responses from the model.
     """
     response = requests.post(
-        self.server_url + "/chat_streaming",
+        self.server_url + "/v1beta/chat_streaming",
         headers=self._get_auth_headers(),
         json=self.__build_request_payload(prompts=prompts,
                                           max_output_tokens=max_output_tokens,
@@ -128,7 +128,7 @@ class ChatModel(Model):
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(
         total=15)) as session:
       async with session.post(
-          self.server_url + "/chat_streaming",
+          self.server_url + "/v1beta/chat_streaming",
           headers=self._get_auth_headers(),
           json=self.__build_request_payload(
               prompts=prompts,
