@@ -1,4 +1,7 @@
-from replit.ai.modelfarm.google.preview.language_models import ChatModel, InputOutputTextPair
+from replit.ai.modelfarm.google.preview.language_models import (
+    ChatModel,
+    InputOutputTextPair,
+)
 import pytest
 from replit.ai.modelfarm.google.structs import TextGenerationResponse
 

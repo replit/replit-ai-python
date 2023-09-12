@@ -1,5 +1,8 @@
 import pytest
-from replit.ai.modelfarm.google.language_models import TextGenerationModel, TextGenerationResponse
+from replit.ai.modelfarm.google.language_models import (
+    TextGenerationModel,
+    TextGenerationResponse,
+)
 
 TEST_PARAMETERS = {
     "temperature": 0.5,  # Temperature controls the degree of randomness in token selection.
