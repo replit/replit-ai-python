@@ -39,5 +39,5 @@ class TextGenerationResponse(BaseModel):
   """
   is_blocked: bool
   raw_prediction_response: Dict[str, Any]
-  safety_attributes: Dict[str, float] = {}
+  safety_attributes: Optional[Dict[str, float]] = None
   text: str

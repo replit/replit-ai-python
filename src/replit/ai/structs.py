@@ -56,7 +56,7 @@ class ChatModelRequest(BaseModel):
 
 class Candidate(BaseModel):
   message: ChatMessage
-  metadata: Dict[str, Any] = {}
+  metadata: Optional[Dict[str, Any]] = None
 
 
 class ChatPromptResponse(BaseModel):
