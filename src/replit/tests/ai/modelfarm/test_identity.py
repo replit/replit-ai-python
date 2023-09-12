@@ -11,7 +11,7 @@ from replit.ai.modelfarm.identity import verify
 from replit.ai.modelfarm.identity.sign import SigningAuthority
 from replit.ai.modelfarm.replit_identity_token_manager import ReplitIdentityTokenManager
 
-from replit.ai import config
+from replit.ai.modelfarm import config
 
 PUBLIC_KEY = "on0FkSmEC+ce40V9Vc4QABXSx6TXo+lhp99b6Ka0gro="
 

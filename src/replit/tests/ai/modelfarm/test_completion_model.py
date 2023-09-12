@@ -1,5 +1,5 @@
 import pytest
-from replit.ai import CompletionModel
+from replit.ai.modelfarm import CompletionModel
 from replit.ai.modelfarm.exceptions import BadRequestException
 
 # module level constants
