@@ -4,8 +4,8 @@ import time
 from typing import Optional
 
 import requests
-from replit.ai.config import get_config
-from replit.ai.identity.sign import SigningAuthority
+from replit.ai.modelfarm.config import get_config
+from replit.ai.modelfarm.identity.sign import SigningAuthority
 
 
 class MissingEnvironmentVariable(Exception):

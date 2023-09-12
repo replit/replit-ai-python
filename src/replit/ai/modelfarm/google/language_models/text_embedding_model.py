@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from replit.ai.embed_model import EmbedModel, EmbeddingModelResponse
+from replit.ai.modelfarm.embed_model import EmbedModel, EmbeddingModelResponse
 from typing import List, Dict, Any
 
 

@@ -9,8 +9,8 @@ from typing import Callable, Dict, Optional, Set, Tuple, cast
 
 import pyseto
 
-from replit.ai.identity.goval.api import signing_pb2
-from replit.ai.identity.exceptions import VerifyError
+from replit.ai.modelfarm.identity.goval.api import signing_pb2
+from replit.ai.modelfarm.identity.exceptions import VerifyError
 
 PubKeySource = Callable[[str, str], pyseto.KeyInterface]
 
