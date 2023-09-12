@@ -9,32 +9,32 @@ CONTENT = [{"content": "1 + 1 = "}]
 # fixture for creating CompletionModel
 @pytest.fixture
 def model():
-  return EmbedModel("textembedding-gecko")
+    return EmbedModel("textembedding-gecko")
 
 
 def test_embed_model_embed(model):
-  response = model.embed(CONTENT)
-  assert len(response.embeddings) == 1
+    response = model.embed(CONTENT)
+    assert len(response.embeddings) == 1
 
-  embedding = response.embeddings[0]
+    embedding = response.embeddings[0]
 
-  assert embedding.truncated is False
-  assert len(embedding.values) == 768
+    assert embedding.truncated is False
+    assert len(embedding.values) == 768
 
-  choice_metadata = embedding.tokenCountMetadata
-  assert embedding.tokenCountMetadata.unbilledTokens == 4
-  pass
+    choice_metadata = embedding.tokenCountMetadata
+    assert embedding.tokenCountMetadata.unbilledTokens == 4
+    pass
 
 
 @pytest.mark.asyncio
 async def test_embed_model_async_embed(model):
-  response = await model.async_embed(CONTENT)
-  assert len(response.embeddings) == 1
+    response = await model.async_embed(CONTENT)
+    assert len(response.embeddings) == 1
 
-  embedding = response.embeddings[0]
+    embedding = response.embeddings[0]
 
-  assert embedding.truncated is False
-  assert len(embedding.values) == 768
+    assert embedding.truncated is False
+    assert len(embedding.values) == 768
 
-  choice_metadata = embedding.tokenCountMetadata
-  assert embedding.tokenCountMetadata.unbilledTokens == 4
+    choice_metadata = embedding.tokenCountMetadata
+    assert embedding.tokenCountMetadata.unbilledTokens == 4

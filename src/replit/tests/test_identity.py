@@ -28,51 +28,55 @@ IDENTITY_TOKEN = "v2.public.Q2dSMFpYTjBJZ1IwWlhOMHDnO17Eg43zucAMSAHnCS4C1wn4QUCC
 
 
 def setup_pub_key():
-  return json.dumps({"dev:1": PUBLIC_KEY})
+    return json.dumps({"dev:1": PUBLIC_KEY})
 
 
 def test_read_public_key_from_env() -> None:
-  """Test read_public_key_from_env."""
-  with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
-    pubkey = verify.read_public_key_from_env("dev:1", "goval")
-    assert isinstance(pubkey, pyseto.versions.v2.V2Public)
+    """Test read_public_key_from_env."""
+    with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
+        pubkey = verify.read_public_key_from_env("dev:1", "goval")
+        assert isinstance(pubkey, pyseto.versions.v2.V2Public)
 
 
 def test_signing_authority() -> None:
-  """Test SigningAuthority."""
-  with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
-    gsa = SigningAuthority(
-        marshaled_private_key=IDENTITY_PRIVATE_KEY,
-        marshaled_identity=IDENTITY_TOKEN,
-        replid="test",
-    )
-    signed_token = gsa.sign("audience")
+    """Test SigningAuthority."""
+    with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
+        gsa = SigningAuthority(
+            marshaled_private_key=IDENTITY_PRIVATE_KEY,
+            marshaled_identity=IDENTITY_TOKEN,
+            replid="test",
+        )
+        signed_token = gsa.sign("audience")
 
-    verify.verify_identity_token(
-        identity_token=signed_token,
-        audience="audience",
-    )
+        verify.verify_identity_token(
+            identity_token=signed_token,
+            audience="audience",
+        )
 
 
 def test_verify_identity_token() -> None:
-  """Test verify_identity_token."""
-  with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
-    verify.verify_identity_token(
-        identity_token=IDENTITY_TOKEN,
-        audience="test",
-    )
+    """Test verify_identity_token."""
+    with patch.dict(os.environ, {"REPL_PUBKEYS": setup_pub_key()}):
+        verify.verify_identity_token(
+            identity_token=IDENTITY_TOKEN,
+            audience="test",
+        )
 
 
 def test_get_interactive_token() -> None:
-  with patch.dict(os.environ, 
-                  {"REPL_PUBKEYS": setup_pub_key(),
-                   "REPL_IDENTITY":IDENTITY_TOKEN,
-                   "REPL_IDENTITY_KEY":IDENTITY_PRIVATE_KEY,
-                   "REPL_ID":"test"}):
-    replit_identity_token_manager = ReplitIdentityTokenManager()
-    signed_token = replit_identity_token_manager.get_interactive_token()
+    with patch.dict(
+        os.environ,
+        {
+            "REPL_PUBKEYS": setup_pub_key(),
+            "REPL_IDENTITY": IDENTITY_TOKEN,
+            "REPL_IDENTITY_KEY": IDENTITY_PRIVATE_KEY,
+            "REPL_ID": "test",
+        },
+    ):
+        replit_identity_token_manager = ReplitIdentityTokenManager()
+        signed_token = replit_identity_token_manager.get_interactive_token()
 
-    verify.verify_identity_token(
-        identity_token=signed_token,
-        audience='modelfarm@replit.com',
-    )
+        verify.verify_identity_token(
+            identity_token=signed_token,
+            audience="modelfarm@replit.com",
+        )
