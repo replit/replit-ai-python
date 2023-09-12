@@ -1,5 +1,8 @@
 from dataclasses import dataclass
-from replit.ai.modelfarm.chat_model import ChatModel as ReplitChatModel, ChatModelResponse
+from replit.ai.modelfarm.chat_model import (
+    ChatModel as ReplitChatModel,
+    ChatModelResponse,
+)
 from replit.ai.modelfarm.structs import (
     ChatSession as ReplitChatSession,
     ChatExample as ReplitChatExample,
