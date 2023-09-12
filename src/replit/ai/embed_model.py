@@ -32,7 +32,7 @@ class EmbedModel(Model):
       EmbeddingModelResponse: The response from the model.
     """
     response = requests.post(
-        self.server_url + "/embedding",
+        self.server_url + "/v1beta/embedding",
         headers=self._get_auth_headers(),
         json=self.__build_request_payload(content, **kwargs),
     )
@@ -53,7 +53,7 @@ class EmbedModel(Model):
     """
     async with aiohttp.ClientSession() as session:
       async with session.post(
-          self.server_url + "/embedding",
+          self.server_url + "/v1beta/embedding",
           headers=self._get_auth_headers(),
           json=self.__build_request_payload(content, **kwargs),
       ) as response:

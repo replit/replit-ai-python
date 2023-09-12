@@ -37,7 +37,7 @@ class CompletionModel(Model):
       CompletionModelResponse: The response from the model.
     """
     response = requests.post(
-        self.server_url + "/completion",
+        self.server_url + "/v1beta/completion",
         headers=self._get_auth_headers(),
         json=self.__build_request_payload(prompts,
                                           max_output_tokens=max_output_tokens,
@@ -66,7 +66,7 @@ class CompletionModel(Model):
     """
     async with aiohttp.ClientSession() as session:
       async with session.post(
-          self.server_url + "/completion",
+          self.server_url + "/v1beta/completion",
           headers=self._get_auth_headers(),
           json=self.__build_request_payload(
               prompts,
@@ -96,7 +96,7 @@ class CompletionModel(Model):
       Iterator[CompletionModelResponse]: An iterator of the responses from the model.
     """
     response = requests.post(
-        self.server_url + "/completion_streaming",
+        self.server_url + "/v1beta/completion_streaming",
         headers=self._get_auth_headers(),
         json=self.__build_request_payload(prompts,
                                           max_output_tokens=max_output_tokens,
@@ -128,7 +128,7 @@ class CompletionModel(Model):
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(
         total=15)) as session:
       async with session.post(
-          self.server_url + "/completion_streaming",
+          self.server_url + "/v1beta/completion_streaming",
           headers=self._get_auth_headers(),
           json=self.__build_request_payload(
               prompts,
