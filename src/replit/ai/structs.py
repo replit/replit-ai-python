@@ -21,7 +21,7 @@ class CompletionModelRequest(BaseModel):
 
 class Choice(BaseModel):
   content: str
-  metadata: Dict[str, Any] = {}
+  metadata: Optional[Dict[str, Any]] = None
 
 
 class PromptResponse(BaseModel):
