@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 
 class GoogleCitation(BaseModel):
@@ -23,8 +23,8 @@ class GoogleSafetyAttributes(BaseModel):
 
 
 class GooglePredictionMetadata(BaseModel):
-  safetyAttributes: GoogleSafetyAttributes
-  citationMetadata: GoogleCitationMetadata
+  safetyAttributes: Optional[GoogleSafetyAttributes] = None
+  citationMetadata: Optional[GoogleCitationMetadata] = None
 
 
 class TextGenerationResponse(BaseModel):
@@ -39,5 +39,5 @@ class TextGenerationResponse(BaseModel):
   """
   is_blocked: bool
   raw_prediction_response: Dict[str, Any]
-  safety_attributes: Dict[str, float]
+  safety_attributes: Dict[str, float] = {}
   text: str

@@ -21,7 +21,7 @@ class CompletionModelRequest(BaseModel):
 
 class Choice(BaseModel):
   content: str
-  metadata: Dict[str, Any]
+  metadata: Dict[str, Any] = {}
 
 
 class PromptResponse(BaseModel):
@@ -29,7 +29,7 @@ class PromptResponse(BaseModel):
 
 
 class CompletionModelResponse(BaseModel):
-  metadata: Optional[Metadata]
+  metadata: Optional[Metadata] = None
   responses: List[PromptResponse]
 
 
@@ -56,7 +56,7 @@ class ChatModelRequest(BaseModel):
 
 class Candidate(BaseModel):
   message: ChatMessage
-  metadata: Dict[str, Any]
+  metadata: Dict[str, Any] = {}
 
 
 class ChatPromptResponse(BaseModel):
@@ -64,18 +64,18 @@ class ChatPromptResponse(BaseModel):
 
 
 class ChatModelResponse(BaseModel):
-  metadata: Optional[Metadata]
+  metadata: Optional[Metadata] = None
   responses: List[ChatPromptResponse]
 
 
 class Embedding(BaseModel):
   values: List[float]
-  tokenCountMetadata: TokenCountMetadata
+  tokenCountMetadata: Optional[TokenCountMetadata] = None
   truncated: bool
 
 
 class EmbeddingMetadata(BaseModel):
-  tokenCountMetadata: TokenCountMetadata
+  tokenCountMetadata: Optional[TokenCountMetadata] = None
 
 
 class EmbeddingModelRequest(BaseModel):
@@ -84,5 +84,5 @@ class EmbeddingModelRequest(BaseModel):
 
 
 class EmbeddingModelResponse(BaseModel):
-  metadata: Optional[EmbeddingMetadata]
+  metadata: Optional[EmbeddingMetadata] = None
   embeddings: List[Embedding]
