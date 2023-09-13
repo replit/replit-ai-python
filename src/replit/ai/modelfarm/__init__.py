@@ -1,6 +1,6 @@
 from .completion_model import CompletionModel as CompletionModel
 from .chat_model import ChatModel as ChatModel
-from .embed_model import EmbedModel as EmbedModel
+from .embedding_model import EmbeddingModel as EmbeddingModel
 from .structs import (
     TokenCountMetadata as TokenCountMetadata,
     Metadata as Metadata,
