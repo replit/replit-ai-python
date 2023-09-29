@@ -8,3 +8,7 @@ __pycache__/
 replit.nix
 .pythonlibs/
 
+# Env
+.env
+
+main.py

@@ -31,8 +31,10 @@ class Model:
             server_url (str): Optional. Server URL for the model.
                               Defaults to the value in the configuration.
         """
-        self.server_url = kwargs.get("server_url") or get_config().rootUrl
         self.auth = ReplitIdentityTokenManager()
+        self.server_url = (
+            kwargs.get("server_url") or get_config(self.auth.token_type).rootUrl
+        )
 
     def _check_response(self, response):
         """
@@ -106,10 +108,15 @@ class Model:
         """
         Gets authentication headers required for API requests.
 
+        Uses L402 for lightning payments if not in a Replit environment.
+
         Returns:
             dict: A dictionary containing the Authorization header.
         """
+
         token = self.auth.get_token()
+        if token.startswith("L402"):
+            return {"Authorization": f"{token}"}
         return {"Authorization": f"Bearer {token}"}
 
     def _parse_streaming_response(self, response) -> Iterator[any]:
