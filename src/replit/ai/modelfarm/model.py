@@ -1,8 +1,9 @@
 import json
 from typing import Iterator, List, Union
-
+import os
 import aiohttp
 import requests
+from replit.ai.modelfarm.L402_token_manager import L402TokenManager
 from replit.ai.modelfarm.config import get_config
 from requests import JSONDecodeError
 
@@ -16,6 +17,7 @@ class Model:
 
     Attributes:
         server_url (str): The URL of the server to which the model sends requests.
+        matafor_url (str): The URL of the Matador L402 server if not in a Replit environment.
 
     Methods:
         predict(prompt, parameters): Abstract method to be implemented by subclasses.
@@ -23,16 +25,30 @@ class Model:
 
     server_url: str
 
-    def __init__(self, **kwargs):
+    def __init__(self, server_url=None):
         """
         Initialize a Model object with an optional server URL.
 
         Keyword Arguments:
             server_url (str): Optional. Server URL for the model.
                               Defaults to the value in the configuration.
+            matador_url (str): Optional. Matador URL for the model.
+            l402_api_key (str): Optional. L402 API key for the model.
         """
-        self.server_url = kwargs.get("server_url") or get_config().rootUrl
-        self.auth = ReplitIdentityTokenManager()
+        if any(
+            os.getenv(var)
+            for var in [
+                "REPLIT_DEPLOYMENT",
+                "REPL_IDENTITY_KEY",
+                "REPL_IDENTITY",
+                "REPL_ID",
+            ]
+        ):
+            self.auth = ReplitIdentityTokenManager()
+            self.server_url = server_url or get_config().rootUrl
+        else:
+            self.auth = L402TokenManager()
+            self.server_url = server_url or get_config().matadorUrl
 
     def _check_response(self, response):
         """
@@ -45,6 +61,7 @@ class Model:
             InvalidResponseException: If the response is not valid JSON.
             BadRequestException: If the response contains a 400 status code.
         """
+        print(response)
         try:
             rjson = response.json()
         except JSONDecodeError as e:
@@ -53,6 +70,7 @@ class Model:
         if response.status_code == 400:
             raise BadRequestException(rjson["detail"])
         if response.status_code != 200:
+            print(rjson)
             if "detail" in rjson:
                 raise InvalidResponseException(rjson["detail"])
             raise InvalidResponseException(rjson)
@@ -106,11 +124,15 @@ class Model:
         """
         Gets authentication headers required for API requests.
 
+        Uses L402 for lightning payments if not in a Replit environment.
+
         Returns:
             dict: A dictionary containing the Authorization header.
         """
+
         token = self.auth.get_token()
-        return {"Authorization": f"Bearer {token}"}
+        token_type = self.auth.get_token_type()
+        return {"Authorization": f"{token_type} {token}"}
 
     def _parse_streaming_response(self, response) -> Iterator[any]:
         """
