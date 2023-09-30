@@ -116,6 +116,7 @@ class ChatModel(Model):
             ),
             stream=True,
         )
+        print(response)
         self._check_streaming_response(response)
         for chunk in self._parse_streaming_response(response):
             yield ChatModelResponse(**chunk)
