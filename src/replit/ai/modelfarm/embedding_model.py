@@ -1,8 +1,10 @@
-from .model import Model
-from typing import List, Dict, Any, Iterator
-import requests
-from .structs import ChatModelResponse, ChatSession, EmbeddingModelResponse
+from typing import Any, Dict, Iterator, List
+
 import aiohttp
+import requests
+
+from .model import Model
+from .structs import ChatModelResponse, ChatSession, EmbeddingModelResponse
 
 
 class EmbeddingModel(Model):

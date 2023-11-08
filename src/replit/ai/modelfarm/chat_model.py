@@ -1,8 +1,10 @@
-from .model import Model
-from typing import List, Dict, Any, Iterator
-import requests
-from .structs import ChatModelResponse, ChatSession
+from typing import Any, Dict, Iterator, List, Optional
+
 import aiohttp
+import requests
+
+from .model import Model
+from .structs import ChatMessage, ChatModelResponse
 
 
 class ChatModel(Model):
@@ -21,17 +23,18 @@ class ChatModel(Model):
 
     def chat(
         self,
-        prompts: List[ChatSession],
-        max_output_tokens: int = 1024,
+        messages: List[ChatMessage],
+        max_tokens: Optional[int] = 1024,
         temperature: float = 0.2,
         **kwargs
     ) -> ChatModelResponse:
         """
-        Makes a generation based on the prompts and parameters.
+        Makes a generation based on the messages and parameters.
 
         Args:
-          prompts (List[ChatSession]): The list of chat session prompts.
-          max_output_tokens (int): The maximum number of tokens to generate.
+          messages (List[ChatMessage]): The list of messages in the conversation 
+            so far.
+          max_tokens (int): The maximum number of tokens to generate.
             Defaults to 1024.
           temperature (float): The temperature of the generation. Defaults to 0.2.
 
@@ -43,8 +46,8 @@ class ChatModel(Model):
             self.server_url + "/v1beta/chat",
             headers=self._get_auth_headers(),
             json=self.__build_request_payload(
-                prompts=prompts,
-                max_output_tokens=max_output_tokens,
+                messages=messages,
+                max_tokens=max_tokens,
                 temperature=temperature,
                 **kwargs
             ),
@@ -55,41 +58,41 @@ class ChatModel(Model):
 
     async def async_chat(
         self,
-        prompts: List[str],
-        max_output_tokens: int = 1024,
+        messages: List[ChatMessage],
+        max_tokens: Optional[int] = 1024,
         temperature: float = 0.2,
         **kwargs
     ) -> ChatModelResponse:
         """
-        Makes an asynchronous generation based on the prompts and parameters.
+        Makes an asynchronous generation based on the messages and parameters.
 
         Args:
-          prompts (List[ChatSession]): The list of prompts.
-          max_output_tokens (int): The maximum number of tokens to generate.
+          messages (List[ChatMessage]): The list of messages in the conversation 
+            so far.
+          max_tokens (int): The maximum number of tokens to generate.
             Defaults to 1024.
           temperature (float): The temperature of the generation. Defaults to 0.2.
 
         Returns:
           ChatModelResponse: The response from the model.
         """
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                self.server_url + "/v1beta/chat",
-                headers=self._get_auth_headers(),
-                json=self.__build_request_payload(
-                    prompts=prompts,
-                    max_output_tokens=max_output_tokens,
-                    temperature=temperature,
-                    **kwargs
-                ),
-            ) as response:
-                await self._check_aresponse(response)
-                return ChatModelResponse(**await response.json())
+        async with aiohttp.ClientSession() as session, session.post(
+            self.server_url + "/v1beta2/chat",
+            headers=self._get_auth_headers(),
+            json=self.__build_request_payload(
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                **kwargs
+            ),
+        ) as response:
+            await self._check_aresponse(response)
+            return ChatModelResponse(**await response.json())
 
     def stream_chat(
         self,
-        prompts: List[str],
-        max_output_tokens: int = 1024,
+        messages: List[ChatMessage],
+        max_tokens: Optional[int] = 1024,
         temperature: float = 0.2,
         **kwargs
     ) -> Iterator[ChatModelResponse]:
@@ -97,8 +100,9 @@ class ChatModel(Model):
         Streams generations based on the prompts and parameters.
 
         Args:
-          prompts (List[ChatSession]): The list of prompts.
-          max_output_tokens (int): The maximum number of tokens to generate.
+          messages (List[ChatMessage]): The list of messages in the conversation 
+            so far.
+          max_tokens (int): The maximum number of tokens to generate.
             Defaults to 1024.
           temperature (float): The temperature of the generation. Defaults to 0.2.
 
@@ -106,11 +110,11 @@ class ChatModel(Model):
           Iterator[ChatModelResponse]: An iterator of the responses from the model.
         """
         response = requests.post(
-            self.server_url + "/v1beta/chat_streaming",
+            self.server_url + "/v1beta2/chat_streaming",
             headers=self._get_auth_headers(),
             json=self.__build_request_payload(
-                prompts=prompts,
-                max_output_tokens=max_output_tokens,
+                messages=messages,
+                max_tokens=max_tokens,
                 temperature=temperature,
                 **kwargs
             ),
@@ -122,8 +126,8 @@ class ChatModel(Model):
 
     async def async_stream_chat(
         self,
-        prompts: List[str],
-        max_output_tokens: int = 1024,
+        messages: List[ChatMessage],
+        max_tokens: Optional[int] = 1024,
         temperature: float = 0.2,
         **kwargs
     ) -> Iterator[ChatModelResponse]:
@@ -131,7 +135,8 @@ class ChatModel(Model):
         Streams asynchronous generations based on the prompts and parameters.
 
         Args:
-          prompts (List[ChatSession]): The list of prompts.
+          messages (List[ChatMessage]): The list of messages in the conversation 
+            so far.
           max_output_tokens (int): The maximum number of tokens to generate.
             Defaults to 1024.
           temperature (float): The temperature of the generation. Defaults to 0.2.
@@ -141,26 +146,25 @@ class ChatModel(Model):
         """
         async with aiohttp.ClientSession(
             timeout=aiohttp.ClientTimeout(total=15)
-        ) as session:
-            async with session.post(
-                self.server_url + "/v1beta/chat_streaming",
-                headers=self._get_auth_headers(),
-                json=self.__build_request_payload(
-                    prompts=prompts,
-                    max_output_tokens=max_output_tokens,
-                    temperature=temperature,
-                    **kwargs
-                ),
-            ) as response:
-                await self._check_streaming_aresponse(response)
+        ) as session, session.post(
+            self.server_url + "/v1beta2/chat_streaming",
+            headers=self._get_auth_headers(),
+            json=self.__build_request_payload(
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                **kwargs
+            ),
+        ) as response:
+            await self._check_streaming_aresponse(response)
 
-                async for chunk in self._parse_streaming_aresponse(response):
-                    yield ChatModelResponse(**chunk)
+            async for chunk in self._parse_streaming_aresponse(response):
+                yield ChatModelResponse(**chunk)
 
     def __build_request_payload(
         self,
-        prompts: List[ChatSession],
-        max_output_tokens: int,
+        messages: List[ChatMessage],
+        max_tokens: Optional[int],
         temperature: float,
         **kwargs
     ) -> Dict[str, Any]:
@@ -168,10 +172,10 @@ class ChatModel(Model):
         Builds the request payload.
 
         Args:
-          prompts (List[ChatSession]): The list of prompts.
-          max_output_tokens (int): The maximum number of tokens to generate.
-            Defaults to 1024.
-          temperature (float): The temperature of the generation. Defaults to 0.2.
+          messages (List[ChatMessage]): The list of messages in the conversation 
+            so far.
+          max_tokens (int): The maximum number of tokens to generate.
+          temperature (float): The temperature of the generation.
 
         Returns:
           Dict[str, Any]: The request payload.
@@ -180,9 +184,9 @@ class ChatModel(Model):
         return {
             "model": self.model_name,
             "parameters": {
-                "prompts": [x.model_dump() for x in prompts],
+                "messages": [x.model_dump() for x in messages],
                 "temperature": temperature,
-                "maxOutputTokens": max_output_tokens,
+                "max_tokens": max_tokens,
                 **kwargs,
             },
         }

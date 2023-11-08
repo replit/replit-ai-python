@@ -3,7 +3,7 @@ from .chat_model import ChatModel as ChatModel
 from .embedding_model import EmbeddingModel as EmbeddingModel
 from .structs import (
     TokenCountMetadata as TokenCountMetadata,
-    Metadata as Metadata,
+    GoogleMetadata as GoogleMetadata,
     CompletionModelRequest as CompletionModelRequest,
     Choice as Choice,
     PromptResponse as PromptResponse,
@@ -12,8 +12,7 @@ from .structs import (
     ChatExample as ChatExample,
     ChatSession as ChatSession,
     ChatModelRequest as ChatModelRequest,
-    Candidate as Candidate,
-    ChatPromptResponse as ChatPromptResponse,
+    Choice as Choice,
     ChatModelResponse as ChatModelResponse,
     Embedding as Embedding,
     EmbeddingMetadata as EmbeddingMetadata,

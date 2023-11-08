@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from typing import Any, Dict, List
+
 from replit.ai.modelfarm.embedding_model import EmbeddingModel, EmbeddingModelResponse
-from typing import List, Dict, Any
 
 
 @dataclass

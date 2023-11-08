@@ -1,4 +1,5 @@
-from typing import Optional, List, Union, Dict, Any
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel
 
 
@@ -9,9 +10,15 @@ class TokenCountMetadata(BaseModel):
     unbilledCharacters: int = 0
 
 
-class Metadata(BaseModel):
+class GoogleMetadata(BaseModel):
     inputTokenCount: Optional[TokenCountMetadata] = None
     outputTokenCount: Optional[TokenCountMetadata] = None
+
+
+class Usage(BaseModel):
+    completion_tokens: int
+    prompt_tokens: int
+    total_tokens: int
 
 
 class CompletionModelRequest(BaseModel):
@@ -29,13 +36,13 @@ class PromptResponse(BaseModel):
 
 
 class CompletionModelResponse(BaseModel):
-    metadata: Optional[Metadata] = None
+    metadata: Optional[GoogleMetadata] = None
     responses: List[PromptResponse]
 
 
 class ChatMessage(BaseModel):
-    content: str
-    author: str = ""
+    content: Optional[str] = None
+    role: Optional[str] = None
 
 
 class ChatExample(BaseModel):
@@ -54,18 +61,22 @@ class ChatModelRequest(BaseModel):
     parameters: Dict[str, Any]
 
 
-class Candidate(BaseModel):
-    message: ChatMessage
+class Choice(BaseModel):
+    index: int
+    message: Optional[ChatMessage] = None
+    delta: Optional[ChatMessage] = None
+    finish_reason: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
 
-class ChatPromptResponse(BaseModel):
-    candidates: List[Candidate]
-
-
 class ChatModelResponse(BaseModel):
-    metadata: Optional[Metadata] = None
-    responses: List[ChatPromptResponse]
+    id: str
+    choices: List[Choice]
+    model: str
+    created: Optional[int]
+    object: Optional[str]
+    usage: Optional[Usage]
+    metadata: Optional[GoogleMetadata]
 
 
 class Embedding(BaseModel):
