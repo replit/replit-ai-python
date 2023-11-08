@@ -28,7 +28,7 @@ class CompletionModelRequest(BaseModel):
 
 class Choice(BaseModel):
     content: str
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]]
 
 
 class PromptResponse(BaseModel):
@@ -36,13 +36,13 @@ class PromptResponse(BaseModel):
 
 
 class CompletionModelResponse(BaseModel):
-    metadata: Optional[GoogleMetadata] = None
+    metadata: Optional[GoogleMetadata]
     responses: List[PromptResponse]
 
 
 class ChatMessage(BaseModel):
-    content: Optional[str] = None
-    role: Optional[str] = None
+    content: Optional[str]
+    role: Optional[str]
 
 
 class ChatExample(BaseModel):
@@ -63,10 +63,10 @@ class ChatModelRequest(BaseModel):
 
 class Choice(BaseModel):
     index: int
-    message: Optional[ChatMessage] = None
-    delta: Optional[ChatMessage] = None
-    finish_reason: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    message: Optional[ChatMessage]
+    delta: Optional[ChatMessage]
+    finish_reason: Optional[str]
+    metadata: Optional[Dict[str, Any]]
 
 
 class ChatModelResponse(BaseModel):
@@ -80,12 +80,13 @@ class ChatModelResponse(BaseModel):
 
 
 class Embedding(BaseModel):
-    values: List[float]
-    tokenCountMetadata: Optional[TokenCountMetadata] = None
-    truncated: bool
+    object: str
+    embedding: List[float]
+    index: int
+    metadata: Optional[Dict[str, Any]]
 
 
-class EmbeddingMetadata(BaseModel):
+class GoogleEmbeddingMetadata(BaseModel):
     tokenCountMetadata: Optional[TokenCountMetadata] = None
 
 
@@ -95,5 +96,8 @@ class EmbeddingModelRequest(BaseModel):
 
 
 class EmbeddingModelResponse(BaseModel):
-    metadata: Optional[EmbeddingMetadata] = None
-    embeddings: List[Embedding]
+    object: str
+    data: List[Embedding]
+    model: str
+    usage: Optional[Usage]
+    metadata: Optional[GoogleEmbeddingMetadata]

@@ -15,7 +15,7 @@ from .structs import (
     Choice as Choice,
     ChatModelResponse as ChatModelResponse,
     Embedding as Embedding,
-    EmbeddingMetadata as EmbeddingMetadata,
+    GoogleEmbeddingMetadata as GoogleEmbeddingMetadata,
     EmbeddingModelRequest as EmbeddingModelRequest,
     EmbeddingModelResponse as EmbeddingModelResponse,
 )
