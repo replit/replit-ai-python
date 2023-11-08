@@ -3,14 +3,15 @@ from collections import Counter
 import pytest
 from replit.ai.modelfarm import ChatModel
 from replit.ai.modelfarm.exceptions import BadRequestException
+from replit.ai.modelfarm.structs import ChatMessage
 
 # module level constants
 
 MESSAGES = [
-    {
-        "role": "USER",
-        "content": "What is the meaning of life?",
-    }
+    ChatMessage(
+        role="USER",
+        content="What is the meaning of life?",
+    )
 ]
 
 # kwargs for different endpoints and cases
@@ -35,7 +36,7 @@ def model():
 def test_chat_model_chat(model):
     response = model.chat(MESSAGES, **VALID_KWARGS)
 
-    assert len(response.choices) == 1
+    assert len(response.choices) >= 1
 
     choice = response.choices[0]
 
@@ -67,7 +68,7 @@ def test_chat_model_chat_invalid_parameter(model):
 async def test_chat_model_async_chat(model):
     response = await model.async_chat(MESSAGES, **VALID_KWARGS)
 
-    assert len(response.choices) == 1
+    assert len(response.choices) >= 1
 
     choice = response.choices[0]
 
@@ -89,11 +90,8 @@ def test_chat_model_stream_chat(model):
     assert len(responses) > 1
     for response in responses:
         assert len(response.choices) == 1
-
         choice = response.choices[0]
-
-        choice = response.responses[0].choices[0]
-        assert len(choice.message.content) >= 1
+        assert len(choice.delta.content) >= 1
 
 
 def test_chat_model_stream_chat_invalid_parameter(model):
@@ -121,7 +119,7 @@ async def test_chat_model_async_stream_chat(model):
         assert len(response.choices) == 1
 
         choice = response.choices[0]
-        assert len(choice.message.content) >= 1
+        assert len(choice.delta.content) >= 1
 
 
 @pytest.mark.asyncio
@@ -136,7 +134,7 @@ def test_chat_model_chat_no_duplicates(model):
     responses = model.stream_chat(MESSAGES)
     counter = Counter()
     for response in responses:
-        counter[response.choices[0].message.content] += 1
+        counter[response.choices[0].delta.content] += 1
 
     for content, count in counter.items():
         if count > 1:

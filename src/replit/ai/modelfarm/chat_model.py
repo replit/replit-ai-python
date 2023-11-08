@@ -43,7 +43,7 @@ class ChatModel(Model):
 
         """
         response = requests.post(
-            self.server_url + "/v1beta/chat",
+            self.server_url + "/v1beta2/chat",
             headers=self._get_auth_headers(),
             json=self.__build_request_payload(
                 messages=messages,
