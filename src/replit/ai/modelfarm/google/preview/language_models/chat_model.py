@@ -1,16 +1,17 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from typing import Any, Dict, List, Optional
+
 from replit.ai.modelfarm.chat_model import (
     ChatModel as ReplitChatModel,
+)
+from replit.ai.modelfarm.chat_model import (
     ChatModelResponse,
 )
+from replit.ai.modelfarm.google.structs import TextGenerationResponse
+from replit.ai.modelfarm.google.utils import ready_parameters
 from replit.ai.modelfarm.structs import (
-    ChatSession as ReplitChatSession,
-    ChatExample as ReplitChatExample,
     ChatMessage as ReplitChatMessage,
 )
-from typing import List, Optional, Dict, Any
-from replit.ai.modelfarm.google.utils import ready_parameters
-from replit.ai.modelfarm.google.structs import TextGenerationResponse
 
 USER_AUTHOR = "user"
 MODEL_AUTHOR = "bot"
@@ -44,7 +45,7 @@ class ChatSession:
         parameters: Optional[Dict[str, Any]] = None,
     ):
         self.context = context
-        self.examples = examples = []
+        self.examples = examples or []
         self.message_history = message_history or []
         self.underlying_model = underlying_model
         self.parameters = parameters or {}
@@ -52,9 +53,11 @@ class ChatSession:
     def send_message(self, message: str, **kwargs):
         self.add_user_message(message)
         predictParams = dict(**self.parameters, **kwargs)
-        session = self.get_chat_session()
         response = self.underlying_model.chat(
-            [session], **ready_parameters(predictParams)
+            messages=self.__build_replit_messages_from_history(),
+            examples=self.__build_chat_examples_from_io(),
+            context=self.context,
+            **ready_parameters(predictParams),
         )
         self.add_model_message(self.__get_response_content(response))
         return self.__ready_response(response)
@@ -62,20 +65,23 @@ class ChatSession:
     async def async_send_message(self, message: str, **kwargs):
         self.add_user_message(message)
         predictParams = dict(**self.parameters, **kwargs)
-        session = self.get_chat_session()
         response = await self.underlying_model.async_chat(
-            [session], **ready_parameters(predictParams)
+            messages=self.__build_replit_messages_from_history(),
+            examples=self.__build_chat_examples_from_io(),
+            context=self.context,
+            **ready_parameters(predictParams),
         )
         self.add_model_message(self.__get_response_content(response))
         return self.__ready_response(response)
 
     def send_message_stream(self, message: str, **kwargs):
-        newMessage = self.add_user_message(message)
+        self.add_user_message(message)
         predictParams = dict(**self.parameters, **kwargs)
-        session = self.get_chat_session()
-
         response = self.underlying_model.stream_chat(
-            [session], **ready_parameters(predictParams)
+            messages=self.__build_replit_messages_from_history(),
+            examples=self.__build_chat_examples_from_io(),
+            context=self.context,
+            **ready_parameters(predictParams),
         )
         message = ""
         for chunk in response:
@@ -85,11 +91,13 @@ class ChatSession:
         self.add_model_message(message)
 
     async def async_send_message_stream(self, message: str, **kwargs):
-        newMessage = self.add_user_message(message)
+        self.add_user_message(message)
         predictParams = dict(**self.parameters, **kwargs)
-        session = self.get_chat_session()
         response = self.underlying_model.async_stream_chat(
-            [session], **ready_parameters(predictParams)
+            messages=self.__build_replit_messages_from_history(),
+            examples=self.__build_chat_examples_from_io(),
+            context=self.context,
+            **ready_parameters(predictParams)
         )
         message = ""
         async for chunk in response:
@@ -106,29 +114,28 @@ class ChatSession:
         chatMessage = ChatMessage(content=message, author=MODEL_AUTHOR)
         self.message_history.append(chatMessage)
 
-    def get_chat_session(self):
-        examples = [self.__build_replit_chat_example_from_io(x) for x in self.examples]
-        msgs = [
+    def __build_chat_examples_from_io(self) -> Dict[str, ChatMessage]:
+        return [{
+            "input": asdict(ChatMessage(content=io.input_text, author="")),
+            "output": asdict(ChatMessage(content=io.output_text, author="")),
+        } for io in self.examples]
+    
+    def __build_replit_messages_from_history(self) -> List[ReplitChatMessage]:
+        return [
             self.__build_replit_message_from_google_chat_message(x)
             for x in self.message_history
         ]
 
-        return ReplitChatSession(context=self.context, examples=examples, messages=msgs)
-
     @staticmethod
-    def __build_replit_chat_example_from_io(io: InputOutputTextPair):
-        return ReplitChatExample(
-            input=ReplitChatMessage(content=io.input_text),
-            output=ReplitChatMessage(content=io.output_text),
-        )
-
-    @staticmethod
-    def __build_replit_message_from_google_chat_message(msg: ChatMessage):
-        return ReplitChatMessage(content=msg.content, author=msg.author)
+    def __build_replit_message_from_google_chat_message(
+        msg: ChatMessage,
+    ) -> ReplitChatMessage:
+        return ReplitChatMessage(content=msg.content, role=msg.author)
 
     def __get_response_content(self, response: ChatModelResponse) -> str:
-        candidate = response.responses[0].candidates[0]
-        return candidate.message.content
+        choice = response.choices[0]
+        msg = choice.message or choice.delta
+        return msg.content
 
     def __ready_response(self, response: ChatModelResponse) -> TextGenerationResponse:
         """
@@ -140,17 +147,17 @@ class ChatSession:
         Returns:
             TextGenerationResponse: The transformed response.
         """
-        candidate = response.responses[0].candidates[0]
-        safetyAttributes = candidate.metadata["safetyAttributes"]
+        choice = response.choices[0]
+        msg = choice.message or choice.delta
+        safetyAttributes = choice.metadata["safetyAttributes"]
         safetyCategories = dict(
             zip(safetyAttributes["categories"], safetyAttributes["scores"], strict=True)
         )
-
         return TextGenerationResponse(
             is_blocked=safetyAttributes["blocked"],
-            raw_prediction_response=candidate.model_dump(),
+            raw_prediction_response=choice.model_dump(),
             safety_attributes=safetyCategories,
-            text=candidate.message.content,
+            text=msg.content,
         )
 
 

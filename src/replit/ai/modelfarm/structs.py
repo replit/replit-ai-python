@@ -50,12 +50,6 @@ class ChatExample(BaseModel):
     output: ChatMessage
 
 
-class ChatSession(BaseModel):
-    context: str
-    examples: List[ChatExample]
-    messages: List[ChatMessage]
-
-
 class ChatModelRequest(BaseModel):
     model: str
     parameters: Dict[str, Any]

@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 def ready_parameters(parameters: Dict[str, Any]) -> Dict[str, Any]:
@@ -12,10 +12,8 @@ def ready_parameters(parameters: Dict[str, Any]) -> Dict[str, Any]:
         Dict[str, any]: New dictionary with keys in correct format for API.
     """
     remap = {
-        "max_output_tokens": "maxOutputTokens",
-        "top_k": "topK",
-        "top_p": "topP",
-        "candidate_count": "candidateCount",
-        "stop_sequences": "stopSequences",
+        "max_output_tokens": "max_tokens",
+        "candidate_count": "n",
+        "stop_sequences": "stop",
     }
     return {remap.get(k, k): v for k, v in parameters.items()}

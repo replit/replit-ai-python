@@ -10,7 +10,6 @@ from .structs import (
     CompletionModelResponse as CompletionModelResponse,
     ChatMessage as ChatMessage,
     ChatExample as ChatExample,
-    ChatSession as ChatSession,
     ChatModelRequest as ChatModelRequest,
     Choice as Choice,
     ChatModelResponse as ChatModelResponse,
