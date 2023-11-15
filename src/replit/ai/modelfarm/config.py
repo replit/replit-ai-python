@@ -5,8 +5,8 @@ from dataclasses import dataclass
 class Config:
     """Config for the Model Farm API client."""
 
-    rootUrl: str = "http://localhost:8080"
-    audience: str = "modelfarm-test@replit.com"
+    rootUrl: str = "https://production-modelfarm.replit.com"
+    audience: str = "modelfarm@replit.com"
 
 
 _config = Config()

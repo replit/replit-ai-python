@@ -18,5 +18,10 @@ from .structs import (
     EmbeddingModelRequest as EmbeddingModelRequest,
     EmbeddingModelResponse as EmbeddingModelResponse,
 )
+from .client import (
+    AsyncModelfarm as AsyncModelfarm,
+    Modelfarm as Modelfarm,
+)
 
 __version__ = "0.1.0"
+

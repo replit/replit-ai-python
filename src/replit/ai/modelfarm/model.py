@@ -1,8 +1,6 @@
 import json
-from typing import Iterator, List, Union
+from typing import Any, AsyncIterator, Iterator
 
-import aiohttp
-import requests
 from replit.ai.modelfarm.config import get_config
 from requests import JSONDecodeError
 
@@ -48,7 +46,8 @@ class Model:
         try:
             rjson = response.json()
         except JSONDecodeError as e:
-            raise InvalidResponseException(f"Invalid response: {response.text}") from e
+            raise InvalidResponseException(
+                f"Invalid response: {response.text}") from e
 
         if response.status_code == 400:
             raise BadRequestException(rjson["detail"])
@@ -82,7 +81,8 @@ class Model:
         try:
             rjson = await response.json()
         except JSONDecodeError as e:
-            raise InvalidResponseException(f"Invalid response: {response.text}") from e
+            raise InvalidResponseException(
+                f"Invalid response: {response.text}") from e
 
         if response.status == 400:
             raise BadRequestException(rjson["detail"])
@@ -143,7 +143,7 @@ class Model:
                     break
             buffer = buffer[start_idx:]
 
-    async def _parse_streaming_aresponse(self, response) -> Iterator[any]:
+    async def _parse_streaming_aresponse(self, response) -> AsyncIterator[Any]:
         """
         Asynchronously parses a streaming response from the server.
 

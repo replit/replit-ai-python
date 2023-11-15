@@ -1,40 +1,61 @@
 from collections import Counter
+from typing import List
 
 import pytest
-from replit.ai.modelfarm import ChatModel
+from replit.ai.modelfarm import AsyncModelfarm, Modelfarm
 from replit.ai.modelfarm.exceptions import BadRequestException
-from replit.ai.modelfarm.structs import ChatMessage
+from replit.ai.modelfarm.structsv2.chat import ChatCompletionMessageRequestParam
 
 # module level constants
 
-MESSAGES = [
-    ChatMessage(
-        role="USER",
-        content="What is the meaning of life?",
-    )
+MODEL = "chat-bison"
+
+MESSAGES: List[ChatCompletionMessageRequestParam] = [
+    {
+        "role": "USER",
+        "content": "What is the meaning of life?",
+    },
 ]
 
 # kwargs for different endpoints and cases
 
-VALID_KWARGS = {"top_p": 0.1, "top_k": 20, "stop": ["\n"], "n": 5}
+VALID_KWARGS = {
+    "top_p": 0.1,
+    "stop": ["\n"],
+    "n": 3,
+    "provider_extra_parameters": {
+        "top_k": 20,
+    }
+}
+
 # stream_chat endpoint does not support the candidateCount arg
 VALID_GEN_STREAM_KWARGS = {
     "max_tokens": 128,
     "temperature": 0,
     "top_p": 0.1,
-    "top_k": 20,
+    "provider_extra_parameters": {
+        "top_k": 20,
+    },
 }
-INVALID_KWARGS = {"invalid_parameter": 0.5}
 
 
 # fixture for creating CompletionModel
 @pytest.fixture
-def model():
-    return ChatModel("chat-bison")
+def client() -> Modelfarm:
+    return Modelfarm()
 
 
-def test_chat_model_chat(model):
-    response = model.chat(MESSAGES, **VALID_KWARGS)
+@pytest.fixture
+def async_client() -> AsyncModelfarm:
+    return AsyncModelfarm()
+
+
+def test_chat_model_chat(client: Modelfarm) -> None:
+    response = client.chat.completions.create(
+        messages=MESSAGES,
+        model=MODEL,
+        **VALID_KWARGS,
+    )
 
     assert len(response.choices) >= 1
 
@@ -46,27 +67,37 @@ def test_chat_model_chat(model):
     assert choice_metadata["safetyAttributes"]["blocked"] is False
 
 
-def test_chat_model_chat_no_kwargs(model):
-    response = model.chat(MESSAGES)
+def test_chat_model_chat_no_kwargs(client: Modelfarm) -> None:
+    response = client.chat.completions.create(messages=MESSAGES, model=MODEL)
 
     assert len(response.choices) == 1
 
     choice = response.choices[0]
 
+    assert choice.message.content is not None
     assert len(choice.message.content) > 10
 
     choice_metadata = choice.metadata
+    assert choice_metadata is not None
     assert choice_metadata["safetyAttributes"]["blocked"] is False
 
 
-def test_chat_model_chat_invalid_parameter(model):
+def test_chat_model_chat_invalid_parameter(client: Modelfarm) -> None:
     with pytest.raises(BadRequestException):
-        model.chat(MESSAGES, **INVALID_KWARGS)
+        client.chat.completions.create(
+            messages=MESSAGES,
+            model=MODEL,
+            invalid_parameter=0.5,
+        )
 
 
 @pytest.mark.asyncio
-async def test_chat_model_async_chat(model):
-    response = await model.async_chat(MESSAGES, **VALID_KWARGS)
+async def test_chat_model_async_chat(async_client: AsyncModelfarm) -> None:
+    response = await async_client.chat.completions.create(
+        messages=MESSAGES,
+        model=MODEL,
+        **VALID_KWARGS,
+    )
 
     assert len(response.choices) >= 1
 
@@ -79,39 +110,60 @@ async def test_chat_model_async_chat(model):
 
 
 @pytest.mark.asyncio
-async def test_chat_model_async_chat_invalid_parameter(model):
+async def test_chat_model_async_chat_invalid_parameter(
+        async_client: AsyncModelfarm) -> None:
     with pytest.raises(BadRequestException):
-        await model.async_chat(MESSAGES, **INVALID_KWARGS)
+        await async_client.chat.completions.create(messages=MESSAGES,
+                                                   model=MODEL,
+                                                   invalid_parameter=0.5)
 
 
-def test_chat_model_stream_chat(model):
-    responses = list(model.stream_chat(MESSAGES, **VALID_GEN_STREAM_KWARGS))
+def test_chat_model_stream_chat(client: Modelfarm) -> None:
+    responses = list(
+        client.chat.completions.create(messages=MESSAGES,
+                                       model=MODEL,
+                                       stream=True,
+                                       **VALID_GEN_STREAM_KWARGS))
 
     assert len(responses) > 1
     for response in responses:
         assert len(response.choices) == 1
         choice = response.choices[0]
+        assert choice.delta.content is not None
         assert len(choice.delta.content) >= 1
 
 
-def test_chat_model_stream_chat_invalid_parameter(model):
+def test_chat_model_stream_chat_invalid_parameter(client: Modelfarm) -> None:
     with pytest.raises(BadRequestException):
-        list(model.stream_chat(MESSAGES, **INVALID_KWARGS))
+        list(
+            client.chat.completions.create(messages=MESSAGES,
+                                           model=MODEL,
+                                           stream=True,
+                                           invalid_parameter=0.5))
 
 
-def test_chat_model_stream_chat_raises_with_choice_count_param(model):
+def test_chat_model_stream_chat_raises_with_choice_count_param(
+        client: Modelfarm) -> None:
     """
     Test that stream_chat raises an exception if choice_count is specified.
     """
-    INVALID_CANDIDATE_COUNT_KWARGS = {"n": 5}
     with pytest.raises(BadRequestException):
-        list(model.stream_chat(MESSAGES, **INVALID_CANDIDATE_COUNT_KWARGS))
+        list(
+            client.chat.completions.create(messages=MESSAGES,
+                                           model=MODEL,
+                                           stream=True,
+                                           n=5))
 
 
 @pytest.mark.asyncio
-async def test_chat_model_async_stream_chat(model):
+async def test_chat_model_async_stream_chat(
+        async_client: AsyncModelfarm) -> None:
     responses = [
-        res async for res in model.async_stream_chat(MESSAGES, **VALID_GEN_STREAM_KWARGS)
+        res async for res in await async_client.chat.completions.create(
+            messages=MESSAGES,
+            model=MODEL,
+            stream=True,
+            **VALID_GEN_STREAM_KWARGS)
     ]
 
     assert len(responses) > 1
@@ -119,19 +171,30 @@ async def test_chat_model_async_stream_chat(model):
         assert len(response.choices) == 1
 
         choice = response.choices[0]
+        assert choice.delta.content is not None
         assert len(choice.delta.content) >= 1
 
 
 @pytest.mark.asyncio
-async def test_chat_model_async_stream_chat_invalid_parameter(model):
+async def test_chat_model_async_stream_chat_invalid_parameter(
+        async_client: AsyncModelfarm) -> None:
     with pytest.raises(BadRequestException):
-        async for _ in model.async_stream_chat(MESSAGES, **INVALID_KWARGS):
+        async for _ in await async_client.chat.completions.create(
+                messages=MESSAGES,
+                model=MODEL,
+                stream=True,
+                invalid_parameter=0.5,
+        ):
             pass
 
 
-def test_chat_model_chat_no_duplicates(model):
+def test_chat_model_stream_chat_no_duplicates(client: Modelfarm) -> None:
     # synchronous streaming call
-    responses = model.stream_chat(MESSAGES)
+    responses = client.chat.completions.create(
+        messages=MESSAGES,
+        model=MODEL,
+        stream=True,
+    )
     counter = Counter()
     for response in responses:
         counter[response.choices[0].delta.content] += 1

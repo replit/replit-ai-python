@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any, AsyncIterator, Dict, Iterator, List, Optional
 
 import aiohttp
 import requests
@@ -21,13 +21,11 @@ class ChatModel(Model):
         super().__init__(**kwargs)
         self.model_name = model_name
 
-    def chat(
-        self,
-        messages: List[ChatMessage],
-        max_tokens: Optional[int] = 1024,
-        temperature: float = 0.2,
-        **kwargs
-    ) -> ChatModelResponse:
+    def chat(self,
+             messages: List[ChatMessage],
+             max_tokens: Optional[int] = 1024,
+             temperature: float = 0.2,
+             **kwargs) -> ChatModelResponse:
         """
         Makes a generation based on the messages and parameters.
 
@@ -43,26 +41,22 @@ class ChatModel(Model):
 
         """
         response = requests.post(
-            self.server_url + "/v1beta2/chat",
+            self.server_url + "/v1beta2/chat/completions",
             headers=self._get_auth_headers(),
-            json=self.__build_request_payload(
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                **kwargs
-            ),
+            json=self.__build_request_payload(messages=messages,
+                                              max_tokens=max_tokens,
+                                              temperature=temperature,
+                                              **kwargs),
         )
 
         self._check_response(response)
         return ChatModelResponse(**response.json())
 
-    async def async_chat(
-        self,
-        messages: List[ChatMessage],
-        max_tokens: Optional[int] = 1024,
-        temperature: float = 0.2,
-        **kwargs
-    ) -> ChatModelResponse:
+    async def async_chat(self,
+                         messages: List[ChatMessage],
+                         max_tokens: Optional[int] = 1024,
+                         temperature: float = 0.2,
+                         **kwargs) -> ChatModelResponse:
         """
         Makes an asynchronous generation based on the messages and parameters.
 
@@ -77,25 +71,21 @@ class ChatModel(Model):
           ChatModelResponse: The response from the model.
         """
         async with aiohttp.ClientSession() as session, session.post(
-            self.server_url + "/v1beta2/chat",
-            headers=self._get_auth_headers(),
-            json=self.__build_request_payload(
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                **kwargs
-            ),
+                self.server_url + "/v1beta2/chat/completions",
+                headers=self._get_auth_headers(),
+                json=self.__build_request_payload(messages=messages,
+                                                  max_tokens=max_tokens,
+                                                  temperature=temperature,
+                                                  **kwargs),
         ) as response:
             await self._check_aresponse(response)
             return ChatModelResponse(**await response.json())
 
-    def stream_chat(
-        self,
-        messages: List[ChatMessage],
-        max_tokens: Optional[int] = 1024,
-        temperature: float = 0.2,
-        **kwargs
-    ) -> Iterator[ChatModelResponse]:
+    def stream_chat(self,
+                    messages: List[ChatMessage],
+                    max_tokens: Optional[int] = 1024,
+                    temperature: float = 0.2,
+                    **kwargs) -> Iterator[ChatModelResponse]:
         """
         Streams generations based on the prompts and parameters.
 
@@ -110,27 +100,24 @@ class ChatModel(Model):
           Iterator[ChatModelResponse]: An iterator of the responses from the model.
         """
         response = requests.post(
-            self.server_url + "/v1beta2/chat_streaming",
+            self.server_url + "/v1beta2/chat/completions",
             headers=self._get_auth_headers(),
-            json=self.__build_request_payload(
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                **kwargs
-            ),
+            json=self.__build_request_payload(messages=messages,
+                                              max_tokens=max_tokens,
+                                              temperature=temperature,
+                                              stream=True,
+                                              **kwargs),
             stream=True,
         )
         self._check_streaming_response(response)
         for chunk in self._parse_streaming_response(response):
             yield ChatModelResponse(**chunk)
 
-    async def async_stream_chat(
-        self,
-        messages: List[ChatMessage],
-        max_tokens: Optional[int] = 1024,
-        temperature: float = 0.2,
-        **kwargs
-    ) -> Iterator[ChatModelResponse]:
+    async def async_stream_chat(self,
+                                messages: List[ChatMessage],
+                                max_tokens: Optional[int] = 1024,
+                                temperature: float = 0.2,
+                                **kwargs) -> AsyncIterator[ChatModelResponse]:
         """
         Streams asynchronous generations based on the prompts and parameters.
 
@@ -144,30 +131,24 @@ class ChatModel(Model):
         Returns:
           Iterator[ChatModelResponse]: An iterator of the responses from the model.
         """
-        async with aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=15)
-        ) as session, session.post(
-            self.server_url + "/v1beta2/chat_streaming",
-            headers=self._get_auth_headers(),
-            json=self.__build_request_payload(
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                **kwargs
-            ),
-        ) as response:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(
+                total=15)) as session, session.post(
+                    self.server_url + "/v1beta2/chat/completions",
+                    headers=self._get_auth_headers(),
+                    json=self.__build_request_payload(messages=messages,
+                                                      max_tokens=max_tokens,
+                                                      temperature=temperature,
+                                                      stream=True,
+                                                      **kwargs),
+                ) as response:
             await self._check_streaming_aresponse(response)
 
             async for chunk in self._parse_streaming_aresponse(response):
                 yield ChatModelResponse(**chunk)
 
-    def __build_request_payload(
-        self,
-        messages: List[ChatMessage],
-        max_tokens: Optional[int],
-        temperature: float,
-        **kwargs
-    ) -> Dict[str, Any]:
+    def __build_request_payload(self, messages: List[ChatMessage],
+                                max_tokens: Optional[int], temperature: float,
+                                **kwargs) -> Dict[str, Any]:
         """
         Builds the request payload.
 
@@ -183,10 +164,8 @@ class ChatModel(Model):
 
         return {
             "model": self.model_name,
-            "parameters": {
-                "messages": [x.model_dump() for x in messages],
-                "temperature": temperature,
-                "max_tokens": max_tokens,
-                **kwargs,
-            },
+            "messages": [x.model_dump() for x in messages],
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            **kwargs,
         }
