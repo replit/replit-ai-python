@@ -13,3 +13,7 @@ class TokenCountMetadata(BaseModel):
 class GoogleMetadata(BaseModel):
     inputTokenCount: Optional[TokenCountMetadata] = None
     outputTokenCount: Optional[TokenCountMetadata] = None
+
+
+class GoogleEmbeddingMetadata(BaseModel):
+    tokenCountMetadata: Optional[TokenCountMetadata] = None

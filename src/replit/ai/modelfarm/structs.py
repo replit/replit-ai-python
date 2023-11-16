@@ -38,27 +38,3 @@ class PromptResponse(BaseModel):
 class CompletionModelResponse(BaseModel):
     metadata: Optional[GoogleMetadata]
     responses: List[PromptResponse]
-
-
-class Embedding(BaseModel):
-    object: str
-    embedding: List[float]
-    index: int
-    metadata: Optional[Dict[str, Any]]
-
-
-class GoogleEmbeddingMetadata(BaseModel):
-    tokenCountMetadata: Optional[TokenCountMetadata] = None
-
-
-class EmbeddingModelRequest(BaseModel):
-    model: str
-    parameters: Dict[str, Any]
-
-
-class EmbeddingModelResponse(BaseModel):
-    object: str
-    data: List[Embedding]
-    model: str
-    usage: Optional[Usage]
-    metadata: Optional[GoogleEmbeddingMetadata]

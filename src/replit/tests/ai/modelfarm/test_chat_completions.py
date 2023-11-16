@@ -39,17 +39,6 @@ VALID_GEN_STREAM_KWARGS = {
 }
 
 
-# fixture for creating CompletionModel
-@pytest.fixture
-def client() -> Modelfarm:
-    return Modelfarm()
-
-
-@pytest.fixture
-def async_client() -> AsyncModelfarm:
-    return AsyncModelfarm()
-
-
 def test_chat_model_chat(client: Modelfarm) -> None:
     response = client.chat.completions.create(
         messages=MESSAGES,

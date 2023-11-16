@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 
 
 class Completions:
+    _client: "Modelfarm"
 
     def __init__(self, client: "Modelfarm") -> None:
         """
@@ -159,6 +160,7 @@ class Completions:
 
 
 class AsyncCompletions:
+    _client: "AsyncModelfarm"
 
     def __init__(self, client: "AsyncModelfarm") -> None:
         """

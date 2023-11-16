@@ -9,6 +9,7 @@ from requests import JSONDecodeError, Response
 
 from .chat_completions import AsyncChat, Chat
 from .config import get_config
+from .embeddings import AsyncEmbeddings, Embeddings
 from .exceptions import BadRequestException, InvalidResponseException
 from .replit_identity_token_manager import ReplitIdentityTokenManager
 
@@ -35,6 +36,7 @@ class BaseModelfarm:
 
 class Modelfarm(BaseModelfarm):
     chat: Chat
+    embeddings: Embeddings
 
     def __init__(
         self,
@@ -46,6 +48,7 @@ class Modelfarm(BaseModelfarm):
         super().__init__(base_url)
 
         self.chat = Chat(self)
+        self.embeddings = Embeddings(self)
 
     def _post(
         self,
@@ -131,6 +134,7 @@ class Modelfarm(BaseModelfarm):
 
 class AsyncModelfarm(BaseModelfarm):
     chat: AsyncChat
+    embeddings: AsyncEmbeddings
 
     def __init__(
         self,
@@ -142,6 +146,7 @@ class AsyncModelfarm(BaseModelfarm):
         super().__init__(base_url)
 
         self.chat = AsyncChat(self)
+        self.embeddings = AsyncEmbeddings(self)
 
     @asynccontextmanager
     async def _post(
