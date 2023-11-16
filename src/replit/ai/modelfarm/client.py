@@ -7,7 +7,7 @@ import requests
 from aiohttp import ClientResponse
 from requests import JSONDecodeError, Response
 
-from .chat import AsyncChat, Chat
+from .chat_completions import AsyncChat, Chat
 from .config import get_config
 from .exceptions import BadRequestException, InvalidResponseException
 from .replit_identity_token_manager import ReplitIdentityTokenManager

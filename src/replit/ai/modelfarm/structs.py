@@ -40,39 +40,6 @@ class CompletionModelResponse(BaseModel):
     responses: List[PromptResponse]
 
 
-class ChatMessage(BaseModel):
-    content: Optional[str]
-    role: Optional[str]
-
-
-class ChatExample(BaseModel):
-    input: ChatMessage
-    output: ChatMessage
-
-
-class ChatModelRequest(BaseModel):
-    model: str
-    parameters: Dict[str, Any]
-
-
-class Choice(BaseModel):
-    index: int
-    message: Optional[ChatMessage]
-    delta: Optional[ChatMessage]
-    finish_reason: Optional[str]
-    metadata: Optional[Dict[str, Any]]
-
-
-class ChatModelResponse(BaseModel):
-    id: str
-    choices: List[Choice]
-    model: str
-    created: Optional[int]
-    object: Optional[str]
-    usage: Optional[Usage]
-    metadata: Optional[GoogleMetadata]
-
-
 class Embedding(BaseModel):
     object: str
     embedding: List[float]

@@ -73,8 +73,8 @@ class Completions:
         Makes a generation based on the messages and parameters.
 
         Args:
-            messages (List[ChatMessage]): The list of messages in the conversation 
-                so far.
+            messages (List[ChatCompletionMessageRequestParam]): The list of messages 
+                in the conversation so far.
             model (str): The name of the model to use.
             stream (bool): Whether to stream the responses. Defaults to False.
             max_tokens (int): The maximum number of tokens to generate.
@@ -207,8 +207,8 @@ class AsyncCompletions:
         Makes a generation based on the messages and parameters.
 
         Args:
-            messages (List[ChatMessage]): The list of messages in the conversation 
-                so far.
+            messages (List[ChatCompletionMessageRequestParam]): The list of messages
+                in the conversation so far.
             model (str): The name of the model to use.
             stream (bool): Whether to stream the responses. Defaults to False.
             max_tokens (int): The maximum number of tokens to generate.
@@ -325,8 +325,8 @@ def _build_request_payload(
     Builds the request payload.
 
     Args:
-        messages (List[ChatMessage]): The list of messages in the conversation 
-            so far.
+        messages (List[ChatCompletionMessageRequestParam]): The list of messages 
+            in the conversation so far.
         model (str): The name of the model to use.
         max_tokens (int): The maximum number of tokens to generate.
         temperature (float): The temperature of the generation.

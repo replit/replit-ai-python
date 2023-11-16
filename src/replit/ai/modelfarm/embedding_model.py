@@ -23,8 +23,7 @@ class EmbeddingModel(Model):
         super().__init__(**kwargs)
         self.model_name = model_name
 
-    def embed(self, input: EmbeddingInput,
-              **kwargs) -> EmbeddingModelResponse:
+    def embed(self, input: EmbeddingInput, **kwargs) -> EmbeddingModelResponse:
         """
         Makes a prediction based on the input and parameters.
 
@@ -53,7 +52,7 @@ class EmbeddingModel(Model):
           parameters (Dict[str, Any]): The dictionary of parameters.
 
         Returns:
-          ChatModelResponse: The response from the model.
+          EmbeddingModelResponse: The response from the model.
         """
         async with aiohttp.ClientSession() as session, session.post(
                 self.server_url + "/v1beta2/embedding",
