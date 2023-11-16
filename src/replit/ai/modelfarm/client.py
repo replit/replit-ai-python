@@ -8,6 +8,7 @@ from aiohttp import ClientResponse
 from requests import JSONDecodeError, Response
 
 from .chat_completions import AsyncChat, Chat
+from .completions import AsyncCompletions, Completions
 from .config import get_config
 from .embeddings import AsyncEmbeddings, Embeddings
 from .exceptions import BadRequestException, InvalidResponseException
@@ -37,6 +38,7 @@ class BaseModelfarm:
 class Modelfarm(BaseModelfarm):
     chat: Chat
     embeddings: Embeddings
+    completions: Completions
 
     def __init__(
         self,
@@ -49,6 +51,7 @@ class Modelfarm(BaseModelfarm):
 
         self.chat = Chat(self)
         self.embeddings = Embeddings(self)
+        self.completions = Completions(self)
 
     def _post(
         self,
@@ -135,6 +138,7 @@ class Modelfarm(BaseModelfarm):
 class AsyncModelfarm(BaseModelfarm):
     chat: AsyncChat
     embeddings: AsyncEmbeddings
+    completions: AsyncCompletions
 
     def __init__(
         self,
@@ -147,6 +151,7 @@ class AsyncModelfarm(BaseModelfarm):
 
         self.chat = AsyncChat(self)
         self.embeddings = AsyncEmbeddings(self)
+        self.completions = AsyncCompletions(self)
 
     @asynccontextmanager
     async def _post(

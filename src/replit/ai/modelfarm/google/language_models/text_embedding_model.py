@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from replit.ai.modelfarm import AsyncModelfarm, Modelfarm
-from replit.ai.modelfarm.structsv2.embeddings import Embedding, EmbeddingModelResponse
+from replit.ai.modelfarm.structs.embeddings import Embedding, EmbeddingModelResponse
 
 
 @dataclass

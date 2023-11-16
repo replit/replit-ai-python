@@ -1,4 +1,6 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Set
+
+_PROVIDER_EXTRA_PARAMS = {"context", "examples", "top_k"}
 
 
 def ready_parameters(parameters: Dict[str, Any]) -> Dict[str, Any]:
@@ -16,4 +18,12 @@ def ready_parameters(parameters: Dict[str, Any]) -> Dict[str, Any]:
         "candidate_count": "n",
         "stop_sequences": "stop",
     }
-    return {remap.get(k, k): v for k, v in parameters.items()}
+    params = {remap.get(k, k): v for k, v in parameters.items()}
+
+    provider_extra_parameters = {
+        k: params.pop(k)
+        for k in _PROVIDER_EXTRA_PARAMS if k in params
+    }
+    params["provider_extra_parameters"] = provider_extra_parameters
+
+    return params

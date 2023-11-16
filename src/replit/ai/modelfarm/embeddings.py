@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Any, Dict, Optional
 
-from replit.ai.modelfarm.structsv2.embeddings import (
+from replit.ai.modelfarm.structs.embeddings import (
     EmbeddingModelResponse,
     InputParameter,
 )
@@ -34,7 +34,7 @@ class Embeddings:
           EmbeddingModelResponse: The response from the model.
         """
         response = self._client._post(
-            "/v1beta2/embeddings",
+            "/embeddings",
             payload=_build_request_payload(
                 input,
                 model,
@@ -72,7 +72,7 @@ class AsyncEmbeddings:
                 EmbeddingModelResponse: The response from the model.
             """
         async with self._client._post(
-                "/v1beta2/embeddings",
+                "/embeddings",
                 payload=_build_request_payload(
                     input,
                     model,

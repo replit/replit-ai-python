@@ -1,10 +1,10 @@
 from collections import Counter
-from typing import List
+from typing import Any, Dict, List
 
 import pytest
 from replit.ai.modelfarm import AsyncModelfarm, Modelfarm
 from replit.ai.modelfarm.exceptions import BadRequestException
-from replit.ai.modelfarm.structsv2.chat import ChatCompletionMessageRequestParam
+from replit.ai.modelfarm.structs.chat import ChatCompletionMessageRequestParam
 
 # module level constants
 
@@ -26,6 +26,10 @@ VALID_KWARGS = {
     "provider_extra_parameters": {
         "top_k": 20,
     }
+}
+
+INVALID_KWARGS: Dict[str, Any] = {
+    "invalid_parameter": 0.5,
 }
 
 # stream_chat endpoint does not support the candidateCount arg
@@ -76,7 +80,7 @@ def test_chat_model_chat_invalid_parameter(client: Modelfarm) -> None:
         client.chat.completions.create(
             messages=MESSAGES,
             model=MODEL,
-            invalid_parameter=0.5,
+            **INVALID_KWARGS,
         )
 
 
@@ -104,7 +108,7 @@ async def test_chat_model_async_chat_invalid_parameter(
     with pytest.raises(BadRequestException):
         await async_client.chat.completions.create(messages=MESSAGES,
                                                    model=MODEL,
-                                                   invalid_parameter=0.5)
+                                                   **INVALID_KWARGS)
 
 
 def test_chat_model_stream_chat(client: Modelfarm) -> None:
@@ -128,7 +132,7 @@ def test_chat_model_stream_chat_invalid_parameter(client: Modelfarm) -> None:
             client.chat.completions.create(messages=MESSAGES,
                                            model=MODEL,
                                            stream=True,
-                                           invalid_parameter=0.5))
+                                           **INVALID_KWARGS))
 
 
 def test_chat_model_stream_chat_raises_with_choice_count_param(
@@ -172,7 +176,7 @@ async def test_chat_model_async_stream_chat_invalid_parameter(
                 messages=MESSAGES,
                 model=MODEL,
                 stream=True,
-                invalid_parameter=0.5,
+                **INVALID_KWARGS,
         ):
             pass
 

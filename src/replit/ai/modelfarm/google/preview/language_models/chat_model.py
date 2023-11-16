@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 from replit.ai.modelfarm import AsyncModelfarm, Modelfarm
 from replit.ai.modelfarm.google.structs import TextGenerationResponse
 from replit.ai.modelfarm.google.utils import ready_parameters
-from replit.ai.modelfarm.structsv2.chat import (
+from replit.ai.modelfarm.structs.chat import (
     ChatCompletionMessageRequestParam,
     ChatCompletionResponse,
     ChatCompletionStreamChunkResponse,
@@ -12,8 +12,6 @@ from replit.ai.modelfarm.structsv2.chat import (
 
 USER_AUTHOR = "user"
 MODEL_AUTHOR = "bot"
-
-_PROVIDER_EXTRA_PARAMETERS = {"context", "examples", "top_k"}
 
 
 @dataclass
@@ -65,7 +63,8 @@ class ChatSession:
         response = self._client.chat.completions.create(
             model=self.underlying_model,
             messages=self.__build_replit_messages_from_history(),
-            **self.__ready_chat_parameters(predictParams),
+            stream=False,
+            **ready_parameters(predictParams),
         )
         self.add_model_message(self.__get_response_content(response))
         return self.__ready_response(response)
@@ -80,7 +79,8 @@ class ChatSession:
         response = await self._async_client.chat.completions.create(
             model=self.underlying_model,
             messages=self.__build_replit_messages_from_history(),
-            **self.__ready_chat_parameters(predictParams),
+            stream=False,
+            **ready_parameters(predictParams),
         )
         self.add_model_message(self.__get_response_content(response))
         return self.__ready_response(response)
@@ -96,7 +96,7 @@ class ChatSession:
             model=self.underlying_model,
             messages=self.__build_replit_messages_from_history(),
             stream=True,
-            **self.__ready_chat_parameters(predictParams),
+            **ready_parameters(predictParams),
         )
         message = ""
         for chunk in response:
@@ -116,7 +116,8 @@ class ChatSession:
             model=self.underlying_model,
             messages=self.__build_replit_messages_from_history(),
             stream=True,
-            **self.__ready_chat_parameters(predictParams))
+            **ready_parameters(predictParams),
+        )
         message = ""
         async for chunk in response:
             transformedResponse = self.__ready_response(chunk)
@@ -163,17 +164,6 @@ class ChatSession:
         if isinstance(response, ChatCompletionResponse):
             return response.choices[0].message.content or ""
         return response.choices[0].delta.content or ""
-
-    def __ready_chat_parameters(self, parameters: Dict[str,
-                                                       Any]) -> Dict[str, Any]:
-        # split into provider extra parameters
-        params = ready_parameters(parameters)
-        provider_extra_parameters = {
-            k: params.pop(k)
-            for k in _PROVIDER_EXTRA_PARAMETERS if k in params
-        }
-        params["provider_extra_parameters"] = provider_extra_parameters
-        return params
 
     def __ready_response(
         self, response: Union[ChatCompletionResponse,
