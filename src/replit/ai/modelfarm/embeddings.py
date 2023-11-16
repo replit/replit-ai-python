@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, Optional
 
 from replit.ai.modelfarm.structsv2.embeddings import (
     EmbeddingModelResponse,
@@ -20,6 +20,7 @@ class Embeddings:
         *,
         input: InputParameter,
         model: str,
+        provider_extra_parameters: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ) -> EmbeddingModelResponse:
         """
@@ -34,7 +35,12 @@ class Embeddings:
         """
         response = self._client._post(
             "/v1beta2/embeddings",
-            payload=_build_request_payload(input, model, **kwargs),
+            payload=_build_request_payload(
+                input,
+                model,
+                provider_extra_parameters,
+                **kwargs,
+            ),
         )
         self._client._check_response(response)
         return EmbeddingModelResponse(**response.json())
@@ -48,8 +54,10 @@ class AsyncEmbeddings:
 
     async def create(
         self,
+        *,
         input: InputParameter,
         model: str,
+        provider_extra_parameters: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ) -> EmbeddingModelResponse:
         """
@@ -64,8 +72,13 @@ class AsyncEmbeddings:
                 EmbeddingModelResponse: The response from the model.
             """
         async with self._client._post(
-                "/v1beta2/embedding",
-                payload=_build_request_payload(input, model, **kwargs),
+                "/v1beta2/embeddings",
+                payload=_build_request_payload(
+                    input,
+                    model,
+                    provider_extra_parameters,
+                    **kwargs,
+                ),
         ) as response:
             await self._client._check_response(response)
             return EmbeddingModelResponse(**await response.json())
@@ -74,6 +87,7 @@ class AsyncEmbeddings:
 def _build_request_payload(
     input: InputParameter,
     model: str,
+    provider_extra_parameters: Optional[Dict[str, Any]],
     **kwargs: Any,
 ) -> Dict[str, Any]:
     """
@@ -87,4 +101,11 @@ def _build_request_payload(
       Dict[str, Any]: The request payload.
     """
 
-    return {"model": model, "input": input, **kwargs}
+    params = {
+        "model": model,
+        "input": input,
+        "provider_extra_parameters": provider_extra_parameters,
+        **kwargs,
+    }
+
+    return {k: v for k, v in params.items() if v is not None}

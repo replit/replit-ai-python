@@ -81,6 +81,8 @@ class Completions:
             max_tokens (int): The maximum number of tokens to generate.
                 Defaults to 1024.
             temperature (float): The temperature of the generation. Defaults to 0.2.
+            provider_extra_parameters (Optional[Dict[str, Any]]): Extra parameters
+                of the speficic provider. Defaults to None.
 
         Returns:
           If stream is True, returns an iterator of ChatCompletionStreamChunkResponse.
@@ -216,6 +218,8 @@ class AsyncCompletions:
             max_tokens (int): The maximum number of tokens to generate.
                 Defaults to 1024.
             temperature (float): The temperature of the generation. Defaults to 0.2.
+            provider_extra_parameters (Optional[Dict[str, Any]]): Extra parameters
+                of the speficic provider. Defaults to None.
 
         Returns:
           If stream is True, returns an iterator of ChatCompletionStreamChunkResponse.
@@ -332,6 +336,8 @@ def _build_request_payload(
         model (str): The name of the model to use.
         max_tokens (int): The maximum number of tokens to generate.
         temperature (float): The temperature of the generation.
+        provider_extra_parameters (Optional[Dict[str, Any]]): Extra parameters
+            of the speficic provider.
 
     Returns:
       Dict[str, Any]: The request payload.
