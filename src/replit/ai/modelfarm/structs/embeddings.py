@@ -23,11 +23,6 @@ class Embedding(BaseModel):
     metadata: Optional[Dict[str, Any]]
 
 
-class EmbeddingModelRequest(BaseModel):
-    model: str
-    parameters: Dict[str, Any]
-
-
 class EmbeddingModelResponse(BaseModel):
     object: str
     data: List[Embedding]

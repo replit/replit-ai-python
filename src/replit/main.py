@@ -4,10 +4,10 @@ from replit.ai.modelfarm import AsyncModelfarm, Modelfarm
 async def chat():
     client = AsyncModelfarm()
     completions = await client.chat.completions.create(
-        model="chat-bison@001",
+        model="llama2-7b",
         messages=[
             {
-                "role": "USER",
+                "role": "user",
                 "content": "Hello!",
             },
         ],
@@ -46,10 +46,10 @@ def client_info() -> None:
 
 
 async def main():
-    #client_info()
+    client_info()
     await chat()
-    #await embeddings()
-    #await completions()
+    await embeddings()
+    await completions()
 
 
 if __name__ == "__main__":
