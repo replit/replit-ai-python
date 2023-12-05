@@ -119,7 +119,8 @@ class TextGenerationModel:
         Transforms Completion Model's response into a readily usable format.
 
         Args:
-            response (CompletionModelResponse): The original response from the underlying model.
+            response (CompletionModelResponse): The original response from
+                the underlying model.
 
         Returns:
             TextGenerationResponse: The transformed response.

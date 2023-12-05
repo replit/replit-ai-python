@@ -53,3 +53,4 @@ exclude = [
 # https://beta.ruff.rs/docs/configuration/
 select = ['E', 'W', 'F', 'I', 'B', 'C4', 'ARG', 'SIM']
 ignore = ['W291', 'W292', 'W293']
+extend-exclude = ["*_pb2.py"]

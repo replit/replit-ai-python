@@ -6,14 +6,15 @@ from replit.ai.modelfarm.google.preview.language_models import (
 from replit.ai.modelfarm.google.structs import TextGenerationResponse
 
 parameters = {
-    "temperature":
-    0.5,  # Temperature controls the degree of randomness in token selection.
-    "max_output_tokens":
-    256,  # Token limit determines the maximum amount of text output.
-    "top_p":
-    0.95,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-    "top_k":
-    40,  # A top_k of 1 means the selected token is the most probable among all tokens.
+    # Temperature controls the degree of randomness in token selection.
+    "temperature": 0.5,
+    # Token limit determines the maximum amount of text output.
+    "max_output_tokens": 256,
+    # Tokens are selected from most probable to least until the sum of
+    # their probabilities equals the top_p value.
+    "top_p": 0.95,
+    # A top_k of 1 means the selected token is the most probable among all tokens.
+    "top_k": 40,
 }
 
 
@@ -21,8 +22,8 @@ def test_chat_model_send_message():
     chat_model = ChatModel.from_pretrained("chat-bison@001")
 
     chat = chat_model.start_chat(
-        context=
-        "My name is Miles. You are an astronomer, knowledgeable about the solar system.",
+        context=("My name is Miles. You are an astronomer, "
+                 "knowledgeable about the solar system."),
         examples=[
             InputOutputTextPair(
                 input_text="How many moons does Mars have?",
@@ -41,8 +42,8 @@ async def test_chat_model_async_send_message():
     chat_model = ChatModel.from_pretrained("chat-bison@001")
 
     chat = chat_model.start_chat(
-        context=
-        "My name is Miles. You are an astronomer, knowledgeable about the solar system.",
+        context=("My name is Miles. You are an astronomer, "
+                 "knowledgeable about the solar system."),
         examples=[
             InputOutputTextPair(
                 input_text="How many moons does Mars have?",
@@ -60,8 +61,8 @@ def test_chat_model_send_message_stream():
     chat_model = ChatModel.from_pretrained("chat-bison@001")
 
     chat = chat_model.start_chat(
-        context=
-        "My name is Miles. You are an astronomer, knowledgeable about the solar system.",
+        context=("My name is Miles. You are an astronomer, "
+                 "knowledgeable about the solar system."),
         examples=[
             InputOutputTextPair(
                 input_text="How many moons does Mars have?",
@@ -86,8 +87,8 @@ async def test_chat_model_async_send_message_stream():
     chat_model = ChatModel.from_pretrained("chat-bison@001")
 
     chat = chat_model.start_chat(
-        context=
-        "My name is Miles. You are an astronomer, knowledgeable about the solar system.",
+        context=("My name is Miles. You are an astronomer, "
+                 "knowledgeable about the solar system."),
         examples=[
             InputOutputTextPair(
                 input_text="How many moons does Mars have?",

@@ -18,7 +18,8 @@ class ReplitIdentityTokenManager:
         """Initializes a new instance of ReplitIdentityTokenManager
 
         Args:
-          token_timeout (int): The timeout in seconds for the token. Default is 300 seconds.
+          token_timeout (int): The timeout in seconds for the token.
+            Default is 300 seconds.
         """
         self.token_timeout = token_timeout
         self.last_update: Optional[float] = None

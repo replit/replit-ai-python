@@ -3,8 +3,8 @@
 import base64
 
 import pyseto
-from replit.ai.modelfarm.identity.goval.api import signing_pb2
 from replit.ai.modelfarm.identity import verify
+from replit.ai.modelfarm.identity.goval.api import signing_pb2
 
 
 class SigningAuthority:

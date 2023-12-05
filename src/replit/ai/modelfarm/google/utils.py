@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict
 
 _PROVIDER_EXTRA_PARAMS = {"context", "examples", "top_k"}
 

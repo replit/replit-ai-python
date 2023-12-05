@@ -1,5 +1,6 @@
+from typing import Any, Dict, List, Optional
+
 from pydantic import BaseModel
-from typing import Dict, Any, List, Optional
 
 
 class GoogleCitation(BaseModel):
@@ -32,9 +33,11 @@ class TextGenerationResponse(BaseModel):
     Class representing the response from text generation model.
 
     Attributes:
-        is_blocked (bool): Flag indicating whether the output was blocked due to content safety filters.
+        is_blocked (bool): Flag indicating whether the output was blocked due to
+            content safety filters.
         raw_prediction_response (Dict[str, Any]): Raw response from the AI model.
-        safety_attributes (Dict[str, float]): Dictionary with safety attributes of the generated text.
+        safety_attributes (Dict[str, float]): Dictionary with safety attributes of
+            the generated text.
         text (str): Generated text.
     """
 
