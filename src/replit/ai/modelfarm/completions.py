@@ -289,7 +289,6 @@ class AsyncCompletions:
                     provider_extra_parameters=provider_extra_parameters,
                     **kwargs,
                 ),
-                stream=True,
         ) as response:
             await self._client._check_streaming_response(response)
             async for chunk in self._client._parse_streaming_response(

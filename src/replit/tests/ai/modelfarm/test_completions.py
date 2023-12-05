@@ -10,17 +10,21 @@ LONG_PROMPT = [
     "A very long answer to the question of what is the meaning of life is "
 ]
 VALID_KWARGS = {
-    "topP": 0.1,
-    "topK": 20,
-    "stopSequences": ["\n"],
-    "candidateCount": 5
+    "top_p": 0.1,
+    "stop": ["\n"],
+    "n": 5,
+    "provider_extra_parameters": {
+        "top_k": 20,
+    },
 }
 # stream_complete endpoint does not support the candidateCount arg
 VALID_GEN_STREAM_KWARGS = {
-    "max_output_tokens": 128,
+    "max_tokens": 128,
     "temperature": 0,
-    "topP": 0.1,
-    "topK": 20,
+    "top_p": 0.1,
+    "provider_extra_parameters": {
+        "top_k": 20,
+    },
 }
 INVALID_KWARGS: Dict[str, Any] = {
     "invalid_parameter": 0.5,
@@ -60,14 +64,15 @@ async def test_completion_model_async_complete(
                                                      model=MODEL,
                                                      **VALID_KWARGS)
 
-    assert len(response.responses) == 1
-    assert len(response.responses[0].choices) == 1
+    assert len(response.choices) == 1
 
-    choice = response.responses[0].choices[0]
+    choice = response.choices[0]
 
-    assert "2" in choice.content
+    assert "2" in choice.text
 
     choice_metadata = choice.metadata
+
+    assert choice_metadata is not None
     assert choice_metadata["safetyAttributes"]["blocked"] is False
 
 
