@@ -117,7 +117,7 @@ class Completions:
         **kwargs: Any,
     ) -> ChatCompletionResponse:
         response = self._client._post(
-            "/chat/completions",
+            "/v1beta2/chat/completions",
             payload=_build_request_payload(
                 messages=messages,
                 model=model,
@@ -144,7 +144,7 @@ class Completions:
         Create a stream of ChatCompletionStreamChunkResponse
         """
         response = self._client._post(
-            "/chat/completions",
+            "/v1beta2/chat/completions",
             payload=_build_request_payload(
                 messages=messages,
                 model=model,
@@ -254,7 +254,7 @@ class AsyncCompletions:
         **kwargs: Any,
     ) -> ChatCompletionResponse:
         async with self._client._post(
-                "/chat/completions",
+                "/v1beta2/chat/completions",
                 payload=_build_request_payload(
                     messages=messages,
                     model=model,
@@ -281,7 +281,7 @@ class AsyncCompletions:
         Create a stream of ChatCompletionStreamChunkResponse
         """
         async with self._client._post(
-                "/chat/completions",
+                "/v1beta2/chat/completions",
                 payload=_build_request_payload(
                     messages=messages,
                     model=model,

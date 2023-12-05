@@ -34,7 +34,7 @@ class Embeddings:
           EmbeddingModelResponse: The response from the model.
         """
         response = self._client._post(
-            "/embeddings",
+            "/v1beta2/embeddings",
             payload=_build_request_payload(
                 input,
                 model,
@@ -72,7 +72,7 @@ class AsyncEmbeddings:
                 EmbeddingModelResponse: The response from the model.
             """
         async with self._client._post(
-                "/embeddings",
+                "/v1beta2/embeddings",
                 payload=_build_request_payload(
                     input,
                     model,

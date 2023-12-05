@@ -113,7 +113,7 @@ class Completions:
         Makes a generation based on prompt(s) and parameters.
         """
         response = self._client._post(
-            "/completions",
+            "/v1beta2/completions",
             payload=_build_request_payload(
                 model=model,
                 prompt=prompt,
@@ -140,7 +140,7 @@ class Completions:
         Create a stream of CompletionModelResponse
         """
         response = self._client._post(
-            "/completions",
+            "/v1beta2/completions",
             payload=_build_request_payload(
                 model=model,
                 prompt=prompt,
@@ -252,7 +252,7 @@ class AsyncCompletions:
         Makes a generation based on the prompt(s) and parameters.
         """
         async with self._client._post(
-                "/completions",
+                "/v1beta2/completions",
                 payload=_build_request_payload(
                     model=model,
                     prompt=prompt,
@@ -279,7 +279,7 @@ class AsyncCompletions:
         Create a stream of CompletionModelResponse
         """
         async with self._client._post(
-                "/completions",
+                "/v1beta2/completions",
                 payload=_build_request_payload(
                     model=model,
                     prompt=prompt,
