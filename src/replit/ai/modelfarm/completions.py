@@ -208,7 +208,7 @@ class AsyncCompletions:
 
         Args:
             model (str): The name of the model to use.
-            prompt (PrompParameter): The prompt(s) to generate completion for.
+            prompt (PromptParameter): The prompt(s) to generate completion for.
             stream (bool): Whether to stream the responses. Defaults to False.
             max_tokens (int): The maximum number of tokens to generate.
                 Defaults to 1024.
@@ -310,7 +310,7 @@ def _build_request_payload(
 
     Args:
         model (str): The name of the model to use.
-        prompt (PrompParameter): The prompt(s) to generate completion for.
+        prompt (PromptParameter): The prompt(s) to generate completion for.
         max_tokens (int): The maximum number of tokens to generate.
         temperature (float): The temperature of the generation.
         provider_extra_parameters (Optional[Dict[str, Any]]): Extra parameters
