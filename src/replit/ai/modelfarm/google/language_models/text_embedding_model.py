@@ -45,11 +45,11 @@ class TextEmbeddingModel:
     def __ready_response(
             self, response: EmbeddingModelResponse) -> List[TextEmbedding]:
 
-        def transform_response(x: Embedding):
+        def transform_response(x: Embedding) -> TextEmbedding:
             metadata = x.metadata or {}
-            token_metadata = metadata["tokenCountMetadata"]
-            tokenCount = token_metadata["unbilledTokens"] + token_metadata[
-                "billableTokens"]
+            token_metadata = metadata.get("tokenCountMetadata", {})
+            tokenCount: int = token_metadata.get(
+                "unbilledTokens", 0) + token_metadata.get("billableTokens", 0)
             stats = TextEmbeddingStatistics(tokenCount, metadata["truncated"])
             return TextEmbedding(stats, x.embedding)
 
