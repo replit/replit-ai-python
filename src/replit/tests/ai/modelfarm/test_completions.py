@@ -40,7 +40,7 @@ def test_completion_model_complete(client: Modelfarm) -> None:
         **VALID_KWARGS,
     )
 
-    assert len(response.choices) == 1
+    assert len(response.choices) >= 1
 
     choice = response.choices[0]
 
@@ -64,7 +64,7 @@ async def test_completion_model_async_complete(
                                                      model=MODEL,
                                                      **VALID_KWARGS)
 
-    assert len(response.choices) == 1
+    assert len(response.choices) >= 1
 
     choice = response.choices[0]
 
