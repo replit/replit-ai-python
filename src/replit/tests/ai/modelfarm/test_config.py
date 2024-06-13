@@ -1,4 +1,4 @@
-from replit.ai.modelfarm.config import initialize, get_config, Config
+from replit.ai.modelfarm.config import get_config, initialize
 
 
 def test_config_initialization():

@@ -8,9 +8,8 @@ import os
 from typing import Callable, Dict, Optional, Set, Tuple, cast
 
 import pyseto
-
-from replit.ai.modelfarm.identity.goval.api import signing_pb2
 from replit.ai.modelfarm.identity.exceptions import VerifyError
+from replit.ai.modelfarm.identity.goval.api import signing_pb2
 
 PubKeySource = Callable[[str, str], pyseto.KeyInterface]
 
@@ -79,8 +78,7 @@ def get_signing_authority(token: str) -> signing_pb2.GovalSigningAuthority:
         raise VerifyError(f'only "public" purpose is supported: {purpose}')
 
     return signing_pb2.GovalSigningAuthority.FromString(
-        base64.b64decode(base64.urlsafe_b64decode(raw_footer + "=="))
-    )
+        base64.b64decode(base64.urlsafe_b64decode(raw_footer + "==")))
 
 
 def _verify_raw_claims(
@@ -104,10 +102,10 @@ def _verify_raw_claims(
 
     if not any_replid and replid is not None and replid not in claims.repls:
         raise VerifyError(
-            f"not authorized (replid), got {replid!r}, want {claims.repls!r}"
-        )
+            f"not authorized (replid), got {replid!r}, want {claims.repls!r}")
     if not any_user and user is not None and user not in claims.users:
-        raise VerifyError(f"not authorized (user), got {user!r}, want {claims.users!r}")
+        raise VerifyError(
+            f"not authorized (user), got {user!r}, want {claims.users!r}")
     if not any_user_id and user_id is not None and user_id not in claims.user_ids:
         raise VerifyError(
             f"not authorized (user_id), got {user_id!r}, want {claims.user_ids!r}"
@@ -116,15 +114,10 @@ def _verify_raw_claims(
         raise VerifyError(
             f"not authorized (cluster), got {cluster!r}, want {claims.clusters!r}"
         )
-    if (
-        not any_subcluster
-        and subcluster is not None
-        and subcluster not in claims.subclusters
-    ):
-        raise VerifyError(
-            f"not authorized (subcluster), "
-            f"got {subcluster!r}, want {claims.subclusters!r}"
-        )
+    if (not any_subcluster and subcluster is not None
+            and subcluster not in claims.subclusters):
+        raise VerifyError(f"not authorized (subcluster), "
+                          f"got {subcluster!r}, want {claims.subclusters!r}")
     if not deployments and deployment:
         raise VerifyError("not authorized (deployment)")
 
@@ -152,6 +145,7 @@ def _verify_claims(
         user_id=user_id,
         cluster=cluster,
         subcluster=subcluster,
+        deployment=deployment,
         claims=claims,
     )
 
@@ -174,23 +168,22 @@ class Verifier:
             # If it's signed directly with a root key, grab the pubkey and
             # verify it.
             return (
-                self.verify_token_with_keyid(
-                    token, gsa.key_id, gsa.issuer, pubkey_source
-                ),
+                self.verify_token_with_keyid(token, gsa.key_id, gsa.issuer,
+                                             pubkey_source),
                 None,
             )
 
         if gsa.signed_cert != "":
             # If it's signed by another token, verify the other token first.
             signing_bytes, skip_level_cert = self.verify_chain(
-                gsa.signed_cert, pubkey_source
-            )
+                gsa.signed_cert, pubkey_source)
 
             # Make sure the two parent certs agree.
             signing_cert = self.verify_cert(signing_bytes, skip_level_cert)
 
             # Now verify this token using the parent cert.
-            return self.verify_token_with_cert(token, signing_cert), signing_cert
+            return self.verify_token_with_cert(token,
+                                               signing_cert), signing_cert
 
         raise VerifyError(f"Invalid signing authority: {gsa}")
 
@@ -215,7 +208,8 @@ class Verifier:
         return self.verify_token(token, pubkey)
 
     def verify_cert(
-        self, encoded_cert: bytes, signing_cert: Optional[signing_pb2.GovalCert]
+        self, encoded_cert: bytes,
+        signing_cert: Optional[signing_pb2.GovalCert]
     ) -> signing_pb2.GovalCert:
         """Verifies that the certificate is valid."""
         cert = signing_pb2.GovalCert.FromString(encoded_cert)
@@ -265,10 +259,12 @@ class Verifier:
                     continue
                 if claim.WhichOneof("claim") == "cluster" and any_cluster:
                     continue
-                if claim.WhichOneof("claim") == "subcluster" and any_subcluster:
+                if claim.WhichOneof(
+                        "claim") == "subcluster" and any_subcluster:
                     continue
                 if str(claim) not in authorized_claims:
-                    raise VerifyError(f"signing cert does not authorize claim {claim}")
+                    raise VerifyError(
+                        f"signing cert does not authorize claim {claim}")
 
         return cert
 
@@ -282,7 +278,7 @@ class Verifier:
         return base64.b64decode(decoded.payload)
 
 
-def read_public_key_from_env(keyid: str, issuer: str) -> pyseto.KeyInterface:
+def read_public_key_from_env(keyid: str, _issuer: str) -> pyseto.KeyInterface:
     """Provides a [PubKeySource] that reads public keys from the environment.
 
     Args:

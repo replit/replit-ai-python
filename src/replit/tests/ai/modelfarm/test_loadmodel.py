@@ -1,13 +1,15 @@
-from replit.ai.modelfarm import CompletionModel
+from replit.ai.modelfarm import Modelfarm
 
 
 def test_loadmodel_complete_endpoint():
-    model = CompletionModel("loadtesting")
-    response = model.complete(["1 + 1 = "])
+  client = Modelfarm()
+  response = client.completions.create(
+      model="loadtesting",
+      prompt=["1 + 1 = "],
+  )
 
-    assert len(response.responses) == 1
-    assert len(response.responses[0].choices) == 1
+  assert len(response.choices) == 1
 
-    choice = response.responses[0].choices[0]
+  choice = response.choices[0]
 
-    assert "Content!" in choice.content
+  assert "Content!" in choice.text
